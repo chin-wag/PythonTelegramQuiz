@@ -11,7 +11,27 @@ class Game {
   private Integer curPairIndex = 0;
   Boolean isGameContinued = true;
 
-  
+
+  String handleCommand(String command) {
+    var res = "";
+    switch (command) {
+      case "/score":
+        res = "Ваш счет: " + getScore();
+        break;
+      case "/help":
+        res =  getHelp();
+        break;
+      case "/stop":
+        isGameContinued = false;
+        res = "До встречи";
+        break;
+      default:
+        res = "Неизвестная команда";
+    }
+
+    return "\n--- " + res + " ---\n";
+  }
+
   String getHelp() {
     return "Команды: /help - справка, /score - узнать количество очков, /stop - остановить викторину";
   }
