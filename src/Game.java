@@ -11,6 +11,10 @@ class Game {
   private Integer curPairIndex = 0;
   Boolean isGameContinued = true;
 
+  
+  String getHelp() {
+    return "Команды: /help - справка, /score - узнать количество очков, /stop - остановить викторину";
+  }
 
   String getScore() {
     return Integer.toString(score);
