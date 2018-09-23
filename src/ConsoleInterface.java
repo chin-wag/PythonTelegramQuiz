@@ -46,6 +46,6 @@ public class ConsoleInterface {
   }
 
   private static Boolean isUserInputCommand(String input) {
-    return null;
+    return input.charAt(0) == '/';
   }
 }
