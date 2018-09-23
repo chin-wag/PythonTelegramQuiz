@@ -41,6 +41,8 @@ public class ConsoleInterface {
   }
 
   private static void salute() {
+    out.println("Это математическая викторина. Я задаю вопрос - вы отвечаете.\n" +
+            "За каждый правильный ответ получаете очки. Начинаем!");
   }
 
   private static Boolean isUserInputCommand(String input) {
