@@ -11,6 +11,11 @@ class Game {
   private Integer curPairIndex = 0;
   Boolean isGameContinued = true;
 
+  Game() {
+    handleData();
+    curPair = data.get(0);
+  }
+
   private void setNextQuestion() {
     curPairIndex++;
     if (curPairIndex >= data.size()) {
