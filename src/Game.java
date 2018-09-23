@@ -69,7 +69,7 @@ class Game {
 
   private void handleData() {
     try {
-      var reader = new BufferedReader(new FileReader("src/data"));
+      var reader = new BufferedReader(new FileReader("data"));
       String text;
 
       while ((text = reader.readLine()) != null)
