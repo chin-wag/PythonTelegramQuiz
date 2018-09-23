@@ -21,6 +21,10 @@ class Game {
     curPair = data.get(curPairIndex);
   }
 
+  String getCurrentQuestion() {
+    return curPair.question;
+  }
+
   String handleCommand(String command) {
     var res = "";
     switch (command) {
