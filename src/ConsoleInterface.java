@@ -12,6 +12,18 @@ public class ConsoleInterface {
   }
 
   private static void play() {
+    out.println(game.getHelp());
+    out.println();
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
+    }
+
+    while (game.isGameContinued)
+      doStep();
+
+    out.println("Викторина окончена. Количество очков - " + game.getScore());
   }
 
   private static void doStep() {
