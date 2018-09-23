@@ -1,10 +1,10 @@
-public class QuestionAnswerPair
+class QuestionAnswerPair
 {
-    String question;
-    String answer;
+  String question;
+  String answer;
 
-    QuestionAnswerPair(String[] arr) {
-        question = arr[0];
-        answer = arr[1];
-    }
+  QuestionAnswerPair(String[] arr) {
+    question = arr[0];
+    answer = arr[1];
+  }
 }
