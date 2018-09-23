@@ -12,6 +12,10 @@ class Game {
   Boolean isGameContinued = true;
 
 
+  String getScore() {
+    return Integer.toString(score);
+  }
+
   private void handleData() {
     try {
       var reader = new BufferedReader(new FileReader("src/data"));
