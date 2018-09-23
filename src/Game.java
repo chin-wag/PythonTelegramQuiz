@@ -25,6 +25,15 @@ class Game {
     return curPair.question;
   }
 
+  String checkAnswer(String answer) {
+    if (answer.equals(curPair.answer)) {
+      score++;
+      setNextQuestion();
+      return "Правильный ответ";
+    } else
+      return "Неправильный ответ";
+  }
+
   String handleCommand(String command) {
     var res = "";
     switch (command) {
