@@ -27,6 +27,17 @@ public class ConsoleInterface {
   }
 
   private static void doStep() {
+    out.println("Вопрос: " + game.getCurrentQuestion());
+    out.print("Ваш ответ: ");
+    var curInput = in.nextLine();
+
+    if (isUserInputCommand(curInput)) {
+      out.println(game.handleCommand(curInput));
+    }
+    else {
+      out.println(game.checkAnswer(curInput));
+      out.println();
+    }
   }
 
   private static void salute() {
