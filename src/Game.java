@@ -30,7 +30,7 @@ class Game {
   }
 
   String handleCommand(String command) {
-    var res = "";
+    String res;
     switch (command) {
       case "/score":
         res = "Ваш счет: " + getScore();
