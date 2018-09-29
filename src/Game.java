@@ -20,13 +20,13 @@ class Game {
     return curPair.question;
   }
 
-  String checkAnswer(String answer) {
+  boolean checkAnswer(String answer) {
     if (answer.equals(curPair.answer)) {
       score++;
       nextQuestion();
-      return "Правильный ответ";
+      return true;
     } else
-      return "Неправильный ответ";
+      return false;
   }
 
   String handleCommand(String command) {
@@ -53,8 +53,8 @@ class Game {
     return "Команды: /help - справка, /score - узнать количество очков, /stop - остановить викторину";
   }
 
-  String getScore() {
-    return Integer.toString(score);
+  int getScore() {
+    return score;
   }
 
   void stopGame()
