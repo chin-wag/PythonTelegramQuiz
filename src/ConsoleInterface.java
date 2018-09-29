@@ -32,7 +32,7 @@ public class ConsoleInterface {
     var curInput = in.nextLine();
 
     if (isUserInputCommand(curInput)) {
-      out.println(game.handleCommand(curInput));
+      handleUserCommand(curInput);
     }
     else {
       out.println(game.checkAnswer(curInput));
@@ -47,5 +47,11 @@ public class ConsoleInterface {
 
   private static Boolean isUserInputCommand(String input) {
     return input.charAt(0) == '/';
+  }
+
+  private static void handleUserCommand(String userInput){
+    var userCommand = userInput.substring(1).toUpperCase();
+    var command = UserCommand.valueOf(userCommand);
+    command.execute(game, out);
   }
 }
