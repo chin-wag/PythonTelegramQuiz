@@ -12,7 +12,7 @@ class Game {
     curPair = questionManager.getNextPair();
     if (curPair == null) {
       isGameContinued = false;
-      handleCommand("/stop");
+      stopGame();
     }
   }
 
@@ -27,26 +27,6 @@ class Game {
       return true;
     } else
       return false;
-  }
-
-  String handleCommand(String command) {
-    String res;
-    switch (command) {
-      case "/score":
-        res = "Ваш счет: " + getScore();
-        break;
-      case "/help":
-        res =  getHelp();
-        break;
-      case "/stop":
-        isGameContinued = false;
-        res = "До встречи";
-        break;
-      default:
-        res = "Неизвестная команда";
-    }
-
-    return "\n--- " + res + " ---\n";
   }
 
   String getHelp() {
