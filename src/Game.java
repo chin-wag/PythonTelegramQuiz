@@ -56,4 +56,9 @@ class Game {
   String getScore() {
     return Integer.toString(score);
   }
+
+  void stopGame()
+  {
+    isGameContinued = false;
+  }
 }
