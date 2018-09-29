@@ -8,7 +8,7 @@ class Game {
     curPair = questionManager.getNextPair();
   }
 
-  private void setNextQuestion() {
+  private void nextQuestion() {
     curPair = questionManager.getNextPair();
     if (curPair == null) {
       isGameContinued = false;
@@ -23,7 +23,7 @@ class Game {
   String checkAnswer(String answer) {
     if (answer.equals(curPair.answer)) {
       score++;
-      setNextQuestion();
+      nextQuestion();
       return "Правильный ответ";
     } else
       return "Неправильный ответ";
