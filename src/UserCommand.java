@@ -1,23 +1,27 @@
+import java.io.PrintStream;
+
 enum UserCommand {
   SCORE
   {
-    public void execute(){
-
+    public void execute(Game game, PrintStream out){
+      out.println("Ваш счёт: " + game.getScore());
     }
   },
   HELP
   {
-    public void execute()
+    public void execute(Game game, PrintStream out)
     {
-
+      out.println(game.getHelp());
     }
   },
   STOP {
-    public void execute()
+    public void execute(Game game, PrintStream out)
     {
-
+      out.println("Игра закончена по желанию игрока.");
+      SCORE.execute(game, out);
+      game.stopGame();
     }
   };
 
-  public abstract void execute();
+  public abstract void execute(Game game, PrintStream out);
 }
