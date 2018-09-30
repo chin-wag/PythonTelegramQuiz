@@ -14,10 +14,18 @@ class GameTest {
     try {
       var curPairField = game.getClass().getDeclaredField("curPair");
       curPairField.setAccessible(true);
-      var cur = curPairField.get(game).getClass().getDeclaredField("answer");
-      assertTrue(game.checkAnswer(cur.get(curPairField.get(game)).toString()));
+      var answerField = curPairField.get(game).getClass().getDeclaredField("answer");
+      assertTrue(game.checkAnswer(answerField.get(curPairField.get(game)).toString()));
     } catch (Exception e) {
       System.out.println(e);
     }
+  }
+
+  @Test
+  void testStopGame() throws DataHandlingException {
+    var game = new Game();
+    assertTrue(game.isGameContinued);
+    game.stopGame();
+    assertFalse(game.isGameContinued);
   }
 }
