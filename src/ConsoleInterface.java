@@ -8,7 +8,7 @@ public class ConsoleInterface {
 
   public static void main(String[] args) {
     try{
-    game = new Game();
+      game = new Game();
     } catch (DataHandlingException e){
       System.out.print("Error in data handling: ");
       System.out.println(e.getMessage());
