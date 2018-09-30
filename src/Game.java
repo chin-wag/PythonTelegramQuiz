@@ -1,10 +1,11 @@
 class Game {
   private Integer score = 0;
   private QuestionAnswerPair curPair;
-  private QuestionManager questionManager = new QuestionManager();
+  private QuestionManager questionManager;
   Boolean isGameContinued = true;
 
-  Game() {
+  Game() throws DataHandlingException{
+    questionManager = new QuestionManager();
     curPair = questionManager.getNextPair();
   }
 

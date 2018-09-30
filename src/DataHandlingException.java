@@ -1,4 +1,4 @@
-class DataHandlingException extends Exception{
+class DataHandlingException extends Exception {
   DataHandlingException(String errorMessage){
     super(errorMessage);
   }
