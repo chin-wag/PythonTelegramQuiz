@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConsoleInterfaceTest {
@@ -14,7 +15,7 @@ class ConsoleInterfaceTest {
       assertTrue((Boolean) isUserInputCommandMethod.invoke(consoleInterface, "/smthg"));
       assertFalse((Boolean) isUserInputCommandMethod.invoke(consoleInterface, "smthg"));
     } catch (Exception e) {
-      System.out.println(e);
+      System.out.println(e.getMessage());
     }
   }
 }
