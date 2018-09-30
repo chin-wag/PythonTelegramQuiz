@@ -15,9 +15,10 @@ class GameTest {
       var curPairField = game.getClass().getDeclaredField("curPair");
       curPairField.setAccessible(true);
       var answerField = curPairField.get(game).getClass().getDeclaredField("answer");
+
       assertTrue(game.checkAnswer(answerField.get(curPairField.get(game)).toString()));
     } catch (Exception e) {
-      System.out.println(e);
+      System.out.println(e.getMessage());
     }
   }
 
@@ -25,6 +26,7 @@ class GameTest {
   void testStopGame() throws DataHandlingException {
     var game = new Game();
     assertTrue(game.isGameContinued);
+
     game.stopGame();
     assertFalse(game.isGameContinued);
   }
@@ -36,9 +38,10 @@ class GameTest {
       var curPairField = game.getClass().getDeclaredField("curPair");
       curPairField.setAccessible(true);
       var questionField = curPairField.get(game).getClass().getDeclaredField("question");
+
       assertEquals(questionField.get(curPairField.get(game)).toString(), game.getCurrentQuestion());
     } catch (Exception e) {
-      System.out.println(e);
+      System.out.println(e.getMessage());
     }
 
   }
