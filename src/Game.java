@@ -6,11 +6,11 @@ class Game {
 
   Game() throws DataHandlingException{
     questionManager = new QuestionManager();
-    curPair = questionManager.getNextPair();
+    curPair = questionManager.getNextPair().orElse(null);
   }
 
   private void nextQuestion() {
-    curPair = questionManager.getNextPair();
+    curPair = questionManager.getNextPair().orElse(null);
     if (curPair == null) {
       isGameContinued = false;
       stopGame();

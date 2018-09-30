@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 
 class QuestionManager {
   private List<QuestionAnswerPair> data = new ArrayList<>();
@@ -15,13 +16,10 @@ class QuestionManager {
     questionIterator = data.listIterator();
   }
 
-  QuestionAnswerPair getNextPair() {
-    if (questionIterator.hasNext()) {
-      return questionIterator.next();
-    } else {
-      return null;
-    }
+  Optional<QuestionAnswerPair> getNextPair() {
+    return Optional.ofNullable(questionIterator.hasNext()? questionIterator.next(): null);
   }
+
   private void handleData() throws DataHandlingException{
     try{
       var reader = new BufferedReader(new FileReader("data"));
