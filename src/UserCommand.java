@@ -24,4 +24,9 @@ enum UserCommand {
   };
 
   public abstract void execute(Game game, PrintStream out);
+
+  public static boolean isUserCommand(String text)
+  {
+    return text.charAt(0) == '/';
+  }
 }

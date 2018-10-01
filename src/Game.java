@@ -10,11 +10,11 @@ class Game {
   }
 
   private void nextQuestion() {
-    curPair = questionManager.getNextPair().orElse(null);
-    if (curPair == null) {
-      isGameContinued = false;
+    curPair = questionManager.getNextPair()
+    .orElseGet(() -> {
       stopGame();
-    }
+      return null;
+    });
   }
 
   String getCurrentQuestion() {
