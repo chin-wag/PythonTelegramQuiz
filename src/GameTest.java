@@ -4,27 +4,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameTest {
   @Test
   void testGetScore() throws DataHandlingException {
-    var game = new Game();
+    var game = new Game(new TestQuestionManager());
     assertEquals(0, game.getScore());
   }
 
   @Test
-  void testCheckAnswer() {
-    try {
-      var game = new Game();
-      var curPairField = game.getClass().getDeclaredField("curPair");
-      curPairField.setAccessible(true);
-      var answerField = curPairField.get(game).getClass().getDeclaredField("answer");
-
-      assertTrue(game.checkAnswer(answerField.get(curPairField.get(game)).toString()));
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
+  void testCheckAnswer() throws DataHandlingException{
+      var game = new Game(new TestQuestionManager());
+      assertTrue(game.checkAnswer("Ответ"));
   }
 
   @Test
   void testStopGame() throws DataHandlingException {
-    var game = new Game();
+    var game = new Game(new TestQuestionManager());
     assertTrue(game.isGameContinued);
 
     game.stopGame();
@@ -33,16 +25,8 @@ class GameTest {
 
   @Test
   void testGetCurrentQuestion() throws DataHandlingException {
-    var game = new Game();
-    try {
-      var curPairField = game.getClass().getDeclaredField("curPair");
-      curPairField.setAccessible(true);
-      var questionField = curPairField.get(game).getClass().getDeclaredField("question");
-
-      assertEquals(questionField.get(curPairField.get(game)).toString(), game.getCurrentQuestion());
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
+    var game = new Game(new TestQuestionManager());
+    assertEquals("Вопрос", game.getCurrentQuestion());
 
   }
 }
