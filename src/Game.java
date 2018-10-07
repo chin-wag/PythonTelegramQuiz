@@ -1,11 +1,11 @@
 class Game {
   private Integer score = 0;
   private QuestionAnswerPair curPair;
-  private QuestionManager questionManager;
+  private QuestionManagerInterface questionManager;
   Boolean isGameContinued = true;
 
-  Game() throws DataHandlingException{
-    questionManager = new QuestionManager();
+  Game(QuestionManagerInterface questionManager) {
+    this.questionManager = questionManager;
     curPair = questionManager.getNextPair().orElse(null);
   }
 

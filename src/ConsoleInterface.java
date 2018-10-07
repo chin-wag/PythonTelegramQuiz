@@ -8,7 +8,7 @@ public class ConsoleInterface {
 
   public static void main(String[] args) {
     try{
-      game = new Game();
+      game = new Game(new QuestionManager());
     } catch (DataHandlingException e){
       System.out.println(e.getMessage());
       return;
