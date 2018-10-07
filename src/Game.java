@@ -18,11 +18,11 @@ class Game {
   }
 
   String getCurrentQuestion() {
-    return curPair.question;
+    return curPair.getQuestion();
   }
 
   boolean checkAnswer(String answer) {
-    if (answer.equals(curPair.answer)) {
+    if (answer.equals(curPair.getAnswer())) {
       score++;
       nextQuestion();
       return true;
