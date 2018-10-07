@@ -10,7 +10,6 @@ public class ConsoleInterface {
     try{
       game = new Game();
     } catch (DataHandlingException e){
-      System.out.print("Error in data handling: ");
       System.out.println(e.getMessage());
       return;
     }
@@ -38,10 +37,9 @@ public class ConsoleInterface {
     out.print("Ваш ответ: ");
     var curInput = in.nextLine();
 
-    if (isUserInputCommand(curInput)) {
+    if (UserCommand.isUserInputCommand(curInput)) {
       handleUserCommand(curInput);
-    }
-    else {
+    } else {
       out.println(game.checkAnswer(curInput));
       out.println();
     }
@@ -52,13 +50,13 @@ public class ConsoleInterface {
             "За каждый правильный ответ получаете очки. Начинаем!");
   }
 
-  private static Boolean isUserInputCommand(String input) {
-    return input.charAt(0) == '/';
-  }
-
   private static void handleUserCommand(String userInput){
     var userCommand = userInput.substring(1).toUpperCase();
-    var command = UserCommand.valueOf(userCommand);
-    command.execute(game, out);
+    if(UserCommand.isValidUserCommand(userCommand)){
+      var command = UserCommand.valueOf(userCommand);
+      command.execute(game, out);
+    } else {
+      out.println("Команды " + userInput + " не существует");
+    }
   }
 }
