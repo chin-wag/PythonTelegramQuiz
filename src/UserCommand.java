@@ -25,8 +25,17 @@ enum UserCommand {
 
   public abstract void execute(Game game, PrintStream out);
 
-  public static boolean isUserCommand(String text)
-  {
+  public static boolean isUserInputCommand(String text) {
     return text.charAt(0) == '/';
+  }
+
+  public static Boolean isValidUserCommand(String text){
+    for (UserCommand command : UserCommand.values()) {
+      if (command.name().equals(text)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
