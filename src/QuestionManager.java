@@ -19,7 +19,7 @@ class QuestionManager implements QuestionManagerInterface {
   }
 
   public Optional<QuestionAnswerPair> getNextPair() {
-    return Optional.ofNullable(questionIterator.hasNext()? questionIterator.next(): null);
+    return  questionIterator.hasNext() ? Optional.of(questionIterator.next()) : Optional.empty();
   }
 
   private void handleData() throws DataHandlingException{
