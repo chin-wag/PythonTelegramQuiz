@@ -12,10 +12,10 @@ class UserCommandTest {
 
   @Test
   void testIsUserInputValidCommand() {
-    assertTrue(UserCommand.isValidUserCommand("/score"));
-    assertTrue(UserCommand.isValidUserCommand("/help"));
-    assertTrue(UserCommand.isValidUserCommand("/stop"));
-    assertFalse(UserCommand.isValidUserCommand("/blablabla"));
+    assertTrue(UserCommand.isValidUserCommand("SCORE"));
+    assertTrue(UserCommand.isValidUserCommand("HELP"));
+    assertTrue(UserCommand.isValidUserCommand("STOP"));
+    assertFalse(UserCommand.isValidUserCommand("BLABLABLA"));
   }
 
 }
