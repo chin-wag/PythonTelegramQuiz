@@ -18,7 +18,7 @@ public class ConsoleInterface {
   }
 
   private static void play() {
-    out.println(game.getHelp());
+    UserCommand.HELP.execute(game, out);
     out.println();
     try {
       Thread.sleep(1000);
