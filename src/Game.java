@@ -30,10 +30,6 @@ class Game {
       return false;
   }
 
-  String getHelp() {
-    return "Команды: /help - справка, /score - узнать количество очков, /stop - остановить викторину";
-  }
-
   int getScore() {
     return score;
   }
