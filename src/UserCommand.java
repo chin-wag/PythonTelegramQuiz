@@ -1,10 +1,8 @@
-import java.io.PrintStream;
-
 enum UserCommand {
   SCORE
   {
-    public void execute(Game game, PrintStream out) {
-      out.println("Ваш счёт: " + game.getScore());
+    public void execute(Game game) {
+      ConsoleInterface.printLine("Ваш счёт: " + game.getScore());
     }
 
     public String getDescription() {
@@ -13,7 +11,7 @@ enum UserCommand {
   },
   HELP
   {
-    public void execute(Game game, PrintStream out) {
+    public void execute(Game game) {
       var result = new StringBuilder("Команды: ");
       for (UserCommand command : UserCommand.values()){
         result.append(command.name().toLowerCase());
@@ -23,7 +21,7 @@ enum UserCommand {
       }
       result.deleteCharAt(result.length() - 1);
       result.deleteCharAt(result.length() - 1);
-      out.println(result.toString());
+      ConsoleInterface.printLine(result.toString());
     }
 
     public String getDescription() {
@@ -31,9 +29,9 @@ enum UserCommand {
     }
   },
   STOP {
-    public void execute(Game game, PrintStream out) {
-      out.println("Игра закончена по желанию игрока.");
-      SCORE.execute(game, out);
+    public void execute(Game game) {
+      ConsoleInterface.printLine("Игра закончена по желанию игрока.");
+      SCORE.execute(game);
       game.stopGame();
     }
 
@@ -44,7 +42,7 @@ enum UserCommand {
 
   public abstract String getDescription();
 
-  public abstract void execute(Game game, PrintStream out);
+  public abstract void execute(Game game);
 
   public static boolean isUserInputCommand(String text) {
     return text.charAt(0) == '/';

@@ -7,7 +7,7 @@ public class ConsoleInterface {
   private static Game game;
 
   public static void main(String[] args) {
-    try{
+    try {
       game = new Game(new QuestionManager());
     } catch (DataHandlingException e){
       System.out.println(e.getMessage());
@@ -18,7 +18,7 @@ public class ConsoleInterface {
   }
 
   private static void play() {
-    UserCommand.HELP.execute(game, out);
+    UserCommand.HELP.execute(game);
     out.println();
     try {
       Thread.sleep(1000);
@@ -54,9 +54,13 @@ public class ConsoleInterface {
     var userCommand = userInput.substring(1).toUpperCase();
     if(UserCommand.isValidUserCommand(userCommand)){
       var command = UserCommand.valueOf(userCommand);
-      command.execute(game, out);
+      command.execute(game);
     } else {
       out.println("Команды " + userInput + " не существует");
     }
+  }
+
+  public static void printLine(String line) {
+    out.println(line);
   }
 }
