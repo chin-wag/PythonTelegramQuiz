@@ -60,7 +60,7 @@ public class ConsoleInterface {
     }
   }
 
-  public static void printLine(String line) {
+  static void printLine(String line) {
     out.println(line);
   }
 }
