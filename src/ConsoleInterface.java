@@ -18,7 +18,7 @@ public class ConsoleInterface {
   }
 
   private static void play() {
-    UserCommand.HELP.execute(game);
+    out.println(UserCommand.HELP.execute(game));
     out.println();
     try {
       Thread.sleep(1000);
@@ -54,13 +54,9 @@ public class ConsoleInterface {
     var userCommand = userInput.substring(1).toUpperCase();
     if(UserCommand.isValidUserCommand(userCommand)){
       var command = UserCommand.valueOf(userCommand);
-      command.execute(game);
+      out.println(command.execute(game));
     } else {
       out.println("Команды " + userInput + " не существует");
     }
-  }
-
-  static void printLine(String line) {
-    out.println(line);
   }
 }
