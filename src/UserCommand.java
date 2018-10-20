@@ -1,8 +1,8 @@
 enum UserCommand {
   SCORE
   {
-    public void execute(Game game) {
-      ConsoleInterface.printLine("Ваш счёт: " + game.getScore());
+    public String execute(Game game) {
+      return "Ваш счёт: " + game.getScore();
     }
 
     public String getDescription() {
@@ -11,7 +11,7 @@ enum UserCommand {
   },
   HELP
   {
-    public void execute(Game game) {
+    public String execute(Game game) {
       var result = new StringBuilder("Команды: ");
       for (UserCommand command : UserCommand.values()){
         result.append(command.name().toLowerCase());
@@ -21,7 +21,7 @@ enum UserCommand {
       }
       result.deleteCharAt(result.length() - 1);
       result.deleteCharAt(result.length() - 1);
-      ConsoleInterface.printLine(result.toString());
+      return result.toString();
     }
 
     public String getDescription() {
@@ -29,10 +29,9 @@ enum UserCommand {
     }
   },
   STOP {
-    public void execute(Game game) {
-      ConsoleInterface.printLine("Игра закончена по желанию игрока.");
-      SCORE.execute(game);
+    public String execute(Game game) {
       game.stopGame();
+      return "Игра закончена по желанию игрока.\n" + SCORE.execute(game);
     }
 
     public String getDescription() {
@@ -42,7 +41,7 @@ enum UserCommand {
 
   public abstract String getDescription();
 
-  public abstract void execute(Game game);
+  public abstract String execute(Game game);
 
   public static boolean isUserInputCommand(String text) {
     return text.charAt(0) == '/';
