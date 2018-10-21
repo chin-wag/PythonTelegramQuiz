@@ -13,6 +13,10 @@ class GameManager {
     }
   }
 
+  private void removeUser(Long id) {
+    games.remove(id);
+  }
+
   private Boolean isNewUser(Long id) {
     return !games.containsKey(id);
   }
@@ -33,14 +37,25 @@ class GameManager {
     }
 
     if (!isGameContinued(id)) {
-      return "Викторина окончена. Количество очков - " + getScore(id);
+      var score = getScore(id);
+      removeUser(id);
+      return "Викторина окончена. Количество очков - " + score;
     }
 
     if (UserCommand.isUserInputCommand(input)) {
-      return handleUserCommand(id, input) + (isGameContinued(id)
-              ? "" : "Викторина окончена. Количество очков - " + getScore(id));
+      var answer = handleUserCommand(id, input);
+      if (!isGameContinued(id)) {
+        answer += "Викторина окончена. Количество очков - " + getScore(id);
+        removeUser(id);
+      }
+      return answer;
     } else {
-      return Boolean.toString(games.get(id).checkAnswer(input));
+      var answer = Boolean.toString(games.get(id).checkAnswer(input));
+      if (!isGameContinued(id)) {
+        answer += "\nВикторина окончена. Количество очков - " + getScore(id);
+        removeUser(id);
+      }
+      return answer;
     }
   }
 
@@ -56,6 +71,10 @@ class GameManager {
 
   Boolean isGameContinued(Long id) {
     return games.get(id).isGameContinued;
+  }
+
+  Boolean isGameExistent(Long id) {
+    return games.containsKey(id);
   }
 
   private Integer getScore(Long id) {

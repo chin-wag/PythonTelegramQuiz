@@ -14,7 +14,7 @@ public class TelegramInterface extends TelegramLongPollingBot {
 
     var answer = gameManager.handleUserRequest(currentId, update.getMessage().getText());
     sendMessageToUser(currentId, answer);
-    if (gameManager.isGameContinued(currentId)) {
+    if (gameManager.isGameExistent(currentId) && gameManager.isGameContinued(currentId)) {
       sendMessageToUser(currentId, gameManager.getQuestion(update.getMessage().getChatId()));
     }
   }
