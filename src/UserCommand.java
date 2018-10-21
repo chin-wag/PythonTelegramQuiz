@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 enum UserCommand {
   SCORE
   {
@@ -12,20 +14,26 @@ enum UserCommand {
   HELP
   {
     public String execute(Game game) {
-      var result = new StringBuilder("Команды: ");
-      for (UserCommand command : UserCommand.values()){
-        result.append("/" + command.name().toLowerCase());
-        result.append(" - ");
-        result.append(command.getDescription());
-        result.append(", ");
-      }
-      result.deleteCharAt(result.length() - 1);
-      result.deleteCharAt(result.length() - 1);
-      return result.toString();
+      return "Команды: " + createCommandsDescription();
     }
 
     public String getDescription() {
       return "справка";
+    }
+
+    private String createCommandsDescription() {
+      var result = new ArrayList<String>();
+      for (var userCommand : UserCommand.values()) {
+        var commandBuilder = new StringBuilder();
+        commandBuilder.append('/');
+        commandBuilder.append(userCommand.name().toLowerCase());
+        commandBuilder.append(" - ");
+        commandBuilder.append(userCommand.getDescription());
+
+        result.add(commandBuilder.toString());
+      }
+
+      return String.join(", ", result);
     }
   },
   STOP {

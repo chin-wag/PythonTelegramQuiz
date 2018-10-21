@@ -36,14 +36,3 @@ class QuestionManager implements QuestionManagerInterface {
   }
 }
 
-class TestQuestionManager implements QuestionManagerInterface {
-  private QuestionAnswerPair pair;
-
-  TestQuestionManager() throws DataHandlingException {
-    pair = new QuestionAnswerPair("Вопрос Ответ");
-  }
-
-  public Optional<QuestionAnswerPair> getNextPair() {
-    return Optional.of(pair);
-  }
-}
