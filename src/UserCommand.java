@@ -14,7 +14,7 @@ enum UserCommand {
     public String execute(Game game) {
       var result = new StringBuilder("Команды: ");
       for (UserCommand command : UserCommand.values()){
-        result.append(command.name().toLowerCase());
+        result.append("/" + command.name().toLowerCase());
         result.append(" - ");
         result.append(command.getDescription());
         result.append(", ");
@@ -31,7 +31,7 @@ enum UserCommand {
   STOP {
     public String execute(Game game) {
       game.stopGame();
-      return "Игра закончена по желанию игрока.\n" + SCORE.execute(game);
+      return "Игра закончена по желанию игрока.\n";
     }
 
     public String getDescription() {
