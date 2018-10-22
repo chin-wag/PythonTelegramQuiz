@@ -3,56 +3,47 @@ import java.util.ArrayList;
 enum UserCommand {
   SCORE
   {
+    public String description = "узнать количество очков";
+
     public String execute(Game game) {
       return "Ваш счёт: " + game.getScore();
-    }
-
-    public String getDescription() {
-      return "узнать количество очков";
     }
   },
   HELP
   {
+    public String description = "справка";
+
     public String execute(Game game) {
       return "Команды: " + createCommandsDescription();
-    }
-
-    public String getDescription() {
-      return "справка";
     }
 
     private String createCommandsDescription() {
       var result = new ArrayList<String>();
       for (var userCommand : UserCommand.values()) {
-        var commandBuilder = new StringBuilder();
-        commandBuilder.append('/');
-        commandBuilder.append(userCommand.name().toLowerCase());
-        commandBuilder.append(" - ");
-        commandBuilder.append(userCommand.getDescription());
+        var command = userCommand.name().toLowerCase();
+        var description = userCommand.description;
 
-        result.add(commandBuilder.toString());
+        result.add(String.format("/%s - %s", command, description));
       }
 
       return String.join(", ", result);
     }
   },
   STOP {
+    public String description = "остановить викторину";
+
     public String execute(Game game) {
       game.stopGame();
-      return "Игра закончена по желанию игрока.\n";
-    }
-
-    public String getDescription() {
-      return "остановить викторину";
+      return "Игра закончена по желанию игрока.";
     }
   };
 
-  public abstract String getDescription();
+  public String description;
 
   public abstract String execute(Game game);
 
   public static boolean isUserInputCommand(String text) {
-    return text.charAt(0) == '/';
+    return text.length() > 0 && text.charAt(0) == '/';
   }
 
   public static Boolean isValidUserCommand(String text){

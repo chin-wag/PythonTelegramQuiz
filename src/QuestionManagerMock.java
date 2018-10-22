@@ -3,7 +3,7 @@ import java.util.Optional;
 class QuestionManagerMock implements QuestionManagerInterface {
   private QuestionAnswerPair pair;
 
-  QuestionManagerMock(QuestionAnswerPair questionAnswerPair) throws DataHandlingException {
+  QuestionManagerMock(QuestionAnswerPair questionAnswerPair) {
     pair = questionAnswerPair;
   }
 

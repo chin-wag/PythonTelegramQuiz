@@ -36,34 +36,28 @@ class GameManager {
       return salute() + "\n" + UserCommand.HELP.execute(games.get(id));
     }
 
-    if (!isGameContinued(id)) {
-      var score = getScore(id);
+    var currentGame = games.get(id);
+    var answer  = "";
+    if (currentGame.isGameContinued) {
+      if (UserCommand.isUserInputCommand(input)) {
+        answer = handleUserCommand(currentGame, input);
+      } else {
+        answer = Boolean.toString(currentGame.checkAnswer(input));
+      }
+    }
+    if (!currentGame.isGameContinued) {
+      answer += "\nВикторина окончена. Количество очков - " + currentGame.getScore();
       removeUser(id);
-      return "Викторина окончена. Количество очков - " + score;
     }
 
-    if (UserCommand.isUserInputCommand(input)) {
-      var answer = handleUserCommand(id, input);
-      if (!isGameContinued(id)) {
-        answer += "Викторина окончена. Количество очков - " + getScore(id);
-        removeUser(id);
-      }
-      return answer;
-    } else {
-      var answer = Boolean.toString(games.get(id).checkAnswer(input));
-      if (!isGameContinued(id)) {
-        answer += "\nВикторина окончена. Количество очков - " + getScore(id);
-        removeUser(id);
-      }
-      return answer;
-    }
+    return answer;
   }
 
-  private String handleUserCommand(Long id, String userInput) {
+  private String handleUserCommand(Game game, String userInput) {
     var userCommand = userInput.substring(1).toUpperCase();
     if (UserCommand.isValidUserCommand(userCommand)){
       var command = UserCommand.valueOf(userCommand);
-      return command.execute(games.get(id));
+      return command.execute(game);
     } else {
       return "Команды " + userInput + " не существует";
     }
