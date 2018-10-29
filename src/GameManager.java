@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 class GameManager {
   private Map<Long, Game> games = new HashMap<>() {};
@@ -30,19 +31,21 @@ class GameManager {
             "За каждый правильный ответ получаете очки. Начинаем!";
   }
 
-  String handleUserRequest(Long id, String input) {
+  String handleUserRequest(Long id, Optional<String> input) {
     if (isNewUser(id)) {
       addNewUser(id);
       return salute() + "\n" + UserCommand.HELP.execute(games.get(id));
     }
 
+    var userMessage = input.orElse("");
+
     var currentGame = games.get(id);
     var answer  = "";
     if (currentGame.isGameContinued) {
-      if (UserCommand.isUserInputCommand(input)) {
-        answer = handleUserCommand(currentGame, input);
+      if (UserCommand.isUserInputCommand(userMessage)) {
+        answer = handleUserCommand(currentGame, userMessage);
       } else {
-        answer = Boolean.toString(currentGame.checkAnswer(input));
+        answer = Boolean.toString(currentGame.checkAnswer(userMessage));
       }
     }
     if (!currentGame.isGameContinued) {
