@@ -22,7 +22,7 @@ class Game {
   }
 
   boolean checkAnswer(String answer) {
-    if (answer.equals(curPair.getAnswer())) {
+    if (answer.equalsIgnoreCase(curPair.getAnswer())) {
       score++;
       nextQuestion();
       return true;
