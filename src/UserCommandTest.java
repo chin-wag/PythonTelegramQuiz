@@ -20,15 +20,10 @@ class UserCommandTest {
 
   @Test
   void testHelp() {
-    try {
       assertEquals(
               "Команды: /score - узнать количество очков, /help - справка, /stop - остановить " +
               "викторину",
               UserCommand.HELP.execute(
-                      new Game(new QuestionManagerMock(new QuestionAnswerPair("2+2 4")))));
-    } catch (DataHandlingException e) {
-      e.printStackTrace();
-    }
+                      new Game(new QuestionManagerMock(new QuestionAnswerPair("2+2", "4")))));
   }
-
 }
