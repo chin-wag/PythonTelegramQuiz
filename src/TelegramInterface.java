@@ -2,6 +2,7 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+import java.util.Optional;
 
 public class TelegramInterface extends TelegramLongPollingBot {
   private GameManager gameManager = new GameManager();
@@ -10,7 +11,7 @@ public class TelegramInterface extends TelegramLongPollingBot {
   public void onUpdateReceived(Update update) {
     var currentId = update.getMessage().getChatId();
     System.out.println(currentId + ", " + update.getMessage().getFrom().getUserName() + ", " + update.getMessage().getText());
-    var message = update.getMessage().getSticker() != null ?  "" : update.getMessage().getText();
+    var message = Optional.ofNullable(update.getMessage().getText());//update.getMessage().getText() == null ?  "" : update.getMessage().getText();
     var answer = gameManager.handleUserRequest(currentId, message);
     sendMessageToUser(currentId, answer);
     if (gameManager.isGameExistent(currentId) && gameManager.isGameContinued(currentId)) {
