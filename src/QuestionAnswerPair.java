@@ -3,12 +3,9 @@ class QuestionAnswerPair
   private String question;
   private String answer;
 
-  QuestionAnswerPair(String string) throws DataHandlingException {
-    var currentLine = string.split(" ");
-    if(currentLine.length != 2)
-      throw new DataHandlingException("Line " + string + " has more than 2 values");
-    question = currentLine[0];
-    answer = currentLine[1];
+  QuestionAnswerPair(String question, String answer) {
+    this.question = question;
+    this.answer = answer;
   }
 
   String getQuestion(){
