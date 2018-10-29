@@ -3,7 +3,7 @@ import java.util.ArrayList;
 enum UserCommand {
   SCORE
   {
-    public String description = "узнать количество очков";
+    public String getDescription() { return "узнать количество очков"; }
 
     public String execute(Game game) {
       return "Ваш счёт: " + game.getScore();
@@ -11,7 +11,7 @@ enum UserCommand {
   },
   HELP
   {
-    public String description = "справка";
+    public String getDescription() { return "справка"; }
 
     public String execute(Game game) {
       return "Команды: " + createCommandsDescription();
@@ -21,7 +21,7 @@ enum UserCommand {
       var result = new ArrayList<String>();
       for (var userCommand : UserCommand.values()) {
         var command = userCommand.name().toLowerCase();
-        var description = userCommand.description;
+        var description = userCommand.getDescription();
 
         result.add(String.format("/%s - %s", command, description));
       }
@@ -30,7 +30,7 @@ enum UserCommand {
     }
   },
   STOP {
-    public String description = "остановить викторину";
+    public String getDescription() { return "остановить викторину"; }
 
     public String execute(Game game) {
       game.stopGame();
@@ -38,7 +38,7 @@ enum UserCommand {
     }
   };
 
-  public String description;
+  public abstract String getDescription();
 
   public abstract String execute(Game game);
 
