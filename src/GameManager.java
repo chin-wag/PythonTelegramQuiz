@@ -10,7 +10,6 @@ class GameManager {
       games.put(id, new Game(new QuestionManager()));
     } catch (DataHandlingException e) {
       System.out.println(e.getMessage());
-//      TODO: обработать выход в этом случае
     }
   }
 
@@ -27,7 +26,7 @@ class GameManager {
   }
 
   private String salute() {
-    return "Это математическая викторина. Я задаю вопрос - вы отвечаете.\n" +
+    return "Это викторина по python. Я задаю вопрос - вы отвечаете.\n" +
             "За каждый правильный ответ получаете очки. Начинаем!";
   }
 
