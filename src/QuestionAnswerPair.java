@@ -1,5 +1,15 @@
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="questions_and_answers")
 class QuestionAnswerPair
 {
+  @Id
+  @GeneratedValue
+  private Integer id;
   private String question;
   private String answer;
 
@@ -7,6 +17,8 @@ class QuestionAnswerPair
     this.question = question;
     this.answer = answer;
   }
+
+  public QuestionAnswerPair() {}
 
   String getQuestion(){
     return question;
