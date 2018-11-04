@@ -1,4 +1,6 @@
-import java.sql.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -12,14 +14,6 @@ class QuestionManager implements QuestionManagerInterface {
   private List<QuestionAnswerPair> data = new ArrayList<>();
   private ListIterator<QuestionAnswerPair> questionIterator;
 
-  private static final String url = "jdbc:mysql://localhost:3306/quiz";
-  private static final String user = "root";
-  private static final String password = "12345";
-
-  private Connection connection;
-  private Statement statement;
-  private ResultSet resultSet;
-
   QuestionManager() throws DataHandlingException{
     handleData();
     questionIterator = data.listIterator();
@@ -30,22 +24,25 @@ class QuestionManager implements QuestionManagerInterface {
   }
 
   private void handleData() throws DataHandlingException{
-    try{
-      connection = DriverManager.getConnection(url, user, password);
-      statement = connection.createStatement();
-      resultSet = statement.executeQuery("select question, answer from questions_and_answers");
-
-      while (resultSet.next()) {
-        var question = resultSet.getString(1);
-        var answer = resultSet.getString(2);
-        data.add(new QuestionAnswerPair(question, answer));
+    EntityManagerFactory emf = null;
+    EntityManager em = null;
+    try {
+      emf = Persistence.createEntityManagerFactory("QuizUnit");
+      em = emf.createEntityManager();
+      var result = em.createQuery("select p from QuestionAnswerPair p").getResultList();
+      for(var elem : result){
+        data.add((QuestionAnswerPair) elem);
       }
-    } catch (Exception e){
+    } catch (Exception e) {
       throw new DataHandlingException(e);
-    } finally {
-      try { if (connection != null) connection.close(); } catch(SQLException se) { /*can't do anything */ }
-      try { if (statement != null) statement.close(); } catch(SQLException se) { /*can't do anything */ }
-      try { if (resultSet != null) resultSet.close(); } catch(SQLException se) { /*can't do anything */ }
+    }
+    finally {
+      try {
+      if (emf != null)
+        emf.close();
+      if (em != null)
+        em.close();
+      } catch (IllegalStateException e) {/*can't do anything*/}
     }
   }
 }
