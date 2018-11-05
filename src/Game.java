@@ -1,6 +1,4 @@
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 class Game {
@@ -8,7 +6,9 @@ class Game {
   int id;
 
   private Integer score = 0;
+  @OneToOne
   private QuestionAnswerPair curPair;
+  @Transient
   private QuestionManagerInterface questionManager;
   Boolean isGameContinued = true;
 
