@@ -1,7 +1,4 @@
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +8,7 @@ class GameManager {
   @Id @GeneratedValue
   int id;
 
+  @OneToMany(cascade = CascadeType.PERSIST)
   private Map<Long, Game> games = new HashMap<>() {};
 
   public GameManager() {
@@ -96,7 +94,7 @@ class GameManager {
 
     var tx = em.getTransaction();
     tx.begin();
-    em.persist(games);
+    em.persist(this);
     tx.commit();
 
     em.close();
