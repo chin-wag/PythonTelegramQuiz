@@ -7,8 +7,12 @@
     <persistence-unit name="QuizUnit">
         <!--<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>-->
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <class> QuestionAnswerPair</class>
+        <class>Game</class>
+        <class>QuestionAnswerPair</class>
+        <class>GameManager</class>
         <properties>
+            <property name="javax.persistence.schema-generation.database.action"
+                      value="create"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/quiz" />
             <property name="javax.persistence.jdbc.user" value="root" />

@@ -1,13 +1,24 @@
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Entity
 class GameManager {
+  @Id @GeneratedValue
+  int id;
+
+  @OneToMany(cascade = CascadeType.PERSIST)
   private Map<Long, Game> games = new HashMap<>() {};
+
+  public GameManager() {
+
+  }
 
   private void addNewUser(Long id) {
     try {
       games.put(id, new Game(new QuestionManager()));
+      saveGames();
     } catch (DataHandlingException e) {
       System.out.println(e.getMessage());
     }
@@ -75,5 +86,18 @@ class GameManager {
 
   private Integer getScore(Long id) {
     return games.get(id).getScore();
+  }
+
+  private void saveGames() {
+    var emf = Persistence.createEntityManagerFactory("QuizUnit");
+    var em = emf.createEntityManager();
+
+    var tx = em.getTransaction();
+    tx.begin();
+    em.persist(this);
+    tx.commit();
+
+    em.close();
+    emf.close();
   }
 }

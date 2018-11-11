@@ -1,17 +1,17 @@
 import java.util.ArrayList;
 
 enum UserCommand {
-  SCORE
-  {
+  SCORE {
     public String getDescription() { return "узнать количество очков"; }
 
     public String execute(Game game) {
       return "Ваш счёт: " + game.getScore();
     }
   },
-  HELP
-  {
-    public String getDescription() { return "справка"; }
+  HELP {
+    public String getDescription() {
+      return "справка";
+    }
 
     public String execute(Game game) {
       return "Команды: " + createCommandsDescription();
@@ -30,7 +30,9 @@ enum UserCommand {
     }
   },
   STOP {
-    public String getDescription() { return "остановить викторину"; }
+    public String getDescription() {
+      return "остановить викторину";
+    }
 
     public String execute(Game game) {
       game.stopGame();

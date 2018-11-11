@@ -1,8 +1,20 @@
+import javax.persistence.*;
+
+@Entity
 class Game {
+  @Id @GeneratedValue
+  int id;
+
   private Integer score = 0;
+  @OneToOne
   private QuestionAnswerPair curPair;
+  @Transient
   private QuestionManagerInterface questionManager;
   Boolean isGameContinued = true;
+
+  public Game() {
+
+  }
 
   Game(QuestionManagerInterface questionManager) {
     this.questionManager = questionManager;
@@ -26,8 +38,9 @@ class Game {
       score++;
       nextQuestion();
       return true;
-    } else
-      return false;
+    }
+
+    return false;
   }
 
   int getScore() {
