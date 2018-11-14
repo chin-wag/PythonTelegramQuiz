@@ -4,23 +4,14 @@ import javax.persistence.*;
 class Game {
   @Id
   private long id;
-
   private Integer score = 0;
   @OneToOne
   private QuestionAnswerPair curPair;
-  @Transient
   private QuestionManagerInterface questionManager;
   @Transient
   Boolean isGameContinued = true;
 
-  public Game() {
-
-  }
-
-  Game(QuestionManagerInterface questionManager, Long id, Integer score) {
-    this(questionManager, id);
-    this.score = score;
-  }
+  public Game() {}
 
   Game(QuestionManagerInterface questionManager, Long id) {
     this.questionManager = questionManager;
@@ -63,8 +54,6 @@ class Game {
   int getScore() {
     return score;
   }
-
-  long getId() { return id; }
 
   void stopGame() {
     isGameContinued = false;
