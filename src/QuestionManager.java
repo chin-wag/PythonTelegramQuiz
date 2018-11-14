@@ -1,5 +1,5 @@
 import java.io.Serializable;
-import java.util.ListIterator;
+import java.util.ArrayList;
 import java.util.Optional;
 
 interface QuestionManagerInterface extends Serializable {
@@ -7,11 +7,12 @@ interface QuestionManagerInterface extends Serializable {
 }
 
 class QuestionManager implements QuestionManagerInterface {
-  private ListIterator<QuestionAnswerPair> questionIterator;
+  private ArrayList<QuestionAnswerPair> questions;
+  private Integer currentIndex;
 
   QuestionManager(Long id) throws DataHandlingException{
-    var data = DataBaseManager.getData(id);
-    questionIterator = data.listIterator();
+    questions = DataBaseManager.getData(id);
+    currentIndex = 0;
   }
 
   QuestionManager() throws DataHandlingException {
@@ -19,7 +20,11 @@ class QuestionManager implements QuestionManagerInterface {
   }
 
   public Optional<QuestionAnswerPair> getNextPair() {
-    return  questionIterator.hasNext() ? Optional.of(questionIterator.next()) : Optional.empty();
+    Optional<QuestionAnswerPair> result = questions.size() > currentIndex
+            ? Optional.of(questions.get(currentIndex))
+            : Optional.empty();
+    currentIndex++;
+    return result;
   }
 }
 
