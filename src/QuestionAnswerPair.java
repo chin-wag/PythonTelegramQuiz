@@ -2,10 +2,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name="questions_and_answers")
-class QuestionAnswerPair
+class QuestionAnswerPair implements Serializable
 {
   @Id
   @GeneratedValue
