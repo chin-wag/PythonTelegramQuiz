@@ -9,7 +9,6 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>Game</class>
         <class>QuestionAnswerPair</class>
-        <class>GameManager</class>
         <properties>
             <property name="javax.persistence.schema-generation.database.action"
                       value="create"/>
