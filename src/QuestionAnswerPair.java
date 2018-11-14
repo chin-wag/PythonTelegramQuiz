@@ -27,4 +27,6 @@ class QuestionAnswerPair
   String getAnswer(){
     return answer;
   }
+
+  Integer getId() { return id; }
 }
