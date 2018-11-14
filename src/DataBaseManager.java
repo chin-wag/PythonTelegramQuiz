@@ -64,24 +64,31 @@ class DataBaseManager {
     emf.close();
   }
 
-  static void removeGame(Game game) {
+  static void removeGame(Long id) throws DataHandlingException {
+    var game = getGame(id);
+    if (!game.isPresent()) {
+      throw new DataHandlingException("Game with id " + id.toString() + " is not in database");
+    }
+
+    var existentGame = game.get();
+
     var emf = Persistence.createEntityManagerFactory("QuizUnit");
     var em = emf.createEntityManager();
 
     var tx = em.getTransaction();
     tx.begin();
-    if (!em.contains(game)) {
-      game = em.merge(game);
-    }
 
-    em.remove(game);
+    if (!em.contains(existentGame)) {
+      existentGame = em.merge(existentGame);
+    }
+    em.remove(existentGame);
     tx.commit();
 
     em.close();
     emf.close();
   }
 
-  static Optional<Game> getExistentGame(Long id) {
+  static Optional<Game> getGame(Long id) {
     var emf = Persistence.createEntityManagerFactory("QuizUnit");
     var em = emf.createEntityManager();
     var existentGame = em.find(Game.class, id);
@@ -89,4 +96,19 @@ class DataBaseManager {
     emf.close();
     return Optional.ofNullable(existentGame);
   }
+
+  static Game getExistentGame(Long id) throws DataHandlingException {
+    var game = getGame(id);
+    if (!game.isPresent()) {
+      throw new DataHandlingException("Game with id " + id + "is not in database");
+    }
+
+    return game.get();
+  }
+
+  static boolean isGameExistent(Long id) {
+    return getGame(id).isPresent();
+  }
+
+
 }

@@ -1,9 +1,9 @@
-class DataHandlingException extends Exception {
-  DataHandlingException(String errorMessage){
+class DataBaseException extends Exception {
+  DataBaseException(String errorMessage){
     super(errorMessage);
   }
 
-  DataHandlingException(Throwable e) {
+  DataBaseException(Throwable e) {
     super(e);
   }
 }
