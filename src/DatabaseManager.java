@@ -4,14 +4,23 @@ import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.Optional;
 
-class DataBaseManager {
-  static ArrayList<QuestionAnswerPair> getData(Long id) throws DataHandlingException {
+interface DatabaseManagerInterface {
+  ArrayList<QuestionAnswerPair> getData(Long id) throws DataHandlingException;
+  void updateGame(Game game);
+  void saveGame(Game game);
+  void removeGame(Long id) throws DataHandlingException;
+  Optional<Game> getGame(Long id);
+  Game getExistentGame(Long id) throws DataHandlingException;
+  boolean isGameExistent(Long id);
+}
+
+class DatabaseManager implements DatabaseManagerInterface {
+  private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("QuizUnit");
+  private EntityManager em = emf.createEntityManager();
+
+  public ArrayList<QuestionAnswerPair> getData(Long id) throws DataHandlingException {
     var data = new ArrayList<QuestionAnswerPair>();
-    EntityManagerFactory emf = null;
-    EntityManager em = null;
     try {
-      emf = Persistence.createEntityManagerFactory("QuizUnit");
-      em = emf.createEntityManager();
       Integer startIndex;
       try {
         startIndex = em.find(Game.class, id).getCurrentPairId();
@@ -20,58 +29,31 @@ class DataBaseManager {
       }
       var query = em.createQuery("select p from QuestionAnswerPair p where p.id >= :startIndex");
       query.setParameter("startIndex", startIndex);
-      var result = query.getResultList();
-      for(var elem : result){
-        data.add((QuestionAnswerPair) elem);
-      }
+      data.addAll(query.getResultList());
     } catch (Exception e) {
       throw new DataHandlingException(e);
     }
-    finally {
-      if (em != null)
-        em.close();
-      if (emf != null)
-        emf.close();
-    }
+
     return data;
   }
 
-  static void saveGame(Game game) {
-    var emf = Persistence.createEntityManagerFactory("QuizUnit");
-    var em = emf.createEntityManager();
-
+  public void saveGame(Game game) {
     var tx = em.getTransaction();
     tx.begin();
     em.persist(game);
     tx.commit();
-
-    em.close();
-    emf.close();
   }
 
-  static void updateGame(Game game) {
-    var emf = Persistence.createEntityManagerFactory("QuizUnit");
-    var em = emf.createEntityManager();
-
+  public void updateGame(Game game) {
     var tx = em.getTransaction();
     tx.begin();
     em.merge(game);
     tx.commit();
-
-    em.close();
-    emf.close();
   }
 
-  static void removeGame(Long id) throws DataHandlingException {
-    var game = getGame(id);
-    if (!game.isPresent()) {
-      throw new DataHandlingException("Game with id " + id.toString() + " is not in database");
-    }
-
-    var existentGame = game.get();
-
-    var emf = Persistence.createEntityManagerFactory("QuizUnit");
-    var em = emf.createEntityManager();
+  public void removeGame(Long id) throws DataHandlingException {
+    var existentGame = getGame(id).orElseThrow(()->
+            new DataHandlingException("Game with id " + id.toString() + " is not in database"));
 
     var tx = em.getTransaction();
     tx.begin();
@@ -81,30 +63,18 @@ class DataBaseManager {
     }
     em.remove(existentGame);
     tx.commit();
-
-    em.close();
-    emf.close();
   }
 
-  static Optional<Game> getGame(Long id) {
-    var emf = Persistence.createEntityManagerFactory("QuizUnit");
-    var em = emf.createEntityManager();
-    var existentGame = em.find(Game.class, id);
-    em.close();
-    emf.close();
-    return Optional.ofNullable(existentGame);
+  public Optional<Game> getGame(Long id) {
+    return Optional.ofNullable(em.find(Game.class, id));
   }
 
-  static Game getExistentGame(Long id) throws DataHandlingException {
-    var game = getGame(id);
-    if (!game.isPresent()) {
-      throw new DataHandlingException("Game with id " + id + "is not in database");
-    }
-
-    return game.get();
+  public Game getExistentGame(Long id) throws DataHandlingException {
+    return getGame(id).orElseThrow(()->
+            new DataHandlingException("Game with id " + id.toString() + " is not in database"));
   }
 
-  static boolean isGameExistent(Long id) {
+  public boolean isGameExistent(Long id) {
     return getGame(id).isPresent();
   }
 }
