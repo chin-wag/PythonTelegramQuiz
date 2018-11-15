@@ -1,35 +1,29 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.Optional;
 
-public class QuestionManager {
-  private List<QuestionAnswerPair> data = new ArrayList<>();
-  private ListIterator<QuestionAnswerPair> questionIterator;
+interface QuestionManagerInterface extends Serializable {
+  Optional<QuestionAnswerPair> getNextPair();
+}
 
-  public QuestionManager() {
-    handleData();
-    questionIterator = data.listIterator();
+class QuestionManager implements QuestionManagerInterface {
+  private ArrayList<QuestionAnswerPair> questions;
+  private Integer currentIndex;
+
+  QuestionManager(Long id, DatabaseManagerInterface dataBaseManager) throws DataHandlingException {
+    questions = dataBaseManager.getData(id);
+    currentIndex = 0;
   }
 
-  public QuestionAnswerPair getNextPair() {
-    if (questionIterator.hasNext()) {
-      return questionIterator.next();
-    } else {
-      return null;
-    }
+  QuestionManager(DatabaseManager dataBaseManager) throws DataHandlingException {
+    this((long)1, dataBaseManager);
   }
-  private void handleData() {
-    try {
-      var reader = new BufferedReader(new FileReader("data"));
-      String text;
 
-      while ((text = reader.readLine()) != null)
-        data.add(new QuestionAnswerPair(text.split(" ")));
-    } catch (IOException ex) {
-      System.out.println(ex.getMessage());
-    }
+  public Optional<QuestionAnswerPair> getNextPair() {
+    Optional<QuestionAnswerPair> result = questions.size() > currentIndex
+            ? Optional.of(questions.get(currentIndex))
+            : Optional.empty();
+    currentIndex++;
+    return result;
   }
 }

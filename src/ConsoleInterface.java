@@ -4,15 +4,27 @@ import java.util.Scanner;
 public class ConsoleInterface {
   private static Scanner in = new Scanner(System.in);
   private static PrintStream out = new PrintStream(System.out);
-  private static Game game = new Game();
+  private static Game game;
 
   public static void main(String[] args) {
+    var databaseManager = new DatabaseManager();
+    try {
+      game = new Game(new QuestionManager(databaseManager),(long)-1, databaseManager);
+    } catch (DataHandlingException e){
+      System.out.println(e.getMessage());
+      return;
+    }
     salute();
     play();
+
+    try {
+      game = null;
+      databaseManager.removeGame((long)-1);
+    } catch (DataHandlingException e) {/*game is already not in database*/}
   }
 
   private static void play() {
-    out.println(game.getHelp());
+    out.println(UserCommand.HELP.execute(game));
     out.println();
     try {
       Thread.sleep(1000);
@@ -29,13 +41,12 @@ public class ConsoleInterface {
   private static void doStep() {
     out.println("Вопрос: " + game.getCurrentQuestion());
     out.print("Ваш ответ: ");
-    var curInput = in.nextLine();
+    var currentInput = in.nextLine();
 
-    if (isUserInputCommand(curInput)) {
-      out.println(game.handleCommand(curInput));
-    }
-    else {
-      out.println(game.checkAnswer(curInput));
+    if (UserCommand.isUserInputCommand(currentInput)) {
+      handleUserCommand(currentInput);
+    } else {
+      out.println(game.checkAnswer(currentInput));
       out.println();
     }
   }
@@ -45,7 +56,13 @@ public class ConsoleInterface {
             "За каждый правильный ответ получаете очки. Начинаем!");
   }
 
-  private static Boolean isUserInputCommand(String input) {
-    return input.charAt(0) == '/';
+  private static void handleUserCommand(String userInput){
+    var userCommand = userInput.substring(1).toUpperCase();
+    if(UserCommand.isValidUserCommand(userCommand)){
+      var command = UserCommand.valueOf(userCommand);
+      out.println(command.execute(game));
+    } else {
+      out.println("Команды " + userInput + " не существует");
+    }
   }
 }

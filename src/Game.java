@@ -1,59 +1,72 @@
-class Game {
-  private Integer score = 0;
-  private QuestionAnswerPair curPair;
-  private QuestionManager questionManager = new QuestionManager();
-  Boolean isGameContinued = true;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
-  Game() {
-    curPair = questionManager.getNextPair();
+@Entity
+class Game {
+  @Id
+  private long id;
+  private Integer score = 0;
+  @OneToOne
+  private QuestionAnswerPair curPair;
+  private QuestionManagerInterface questionManager;
+  @Transient
+  Boolean isGameContinued = true;
+  @Transient
+  private DatabaseManagerInterface dataBaseManager;
+
+  public Game() {}
+
+  Game(QuestionManagerInterface questionManager, Long id, DatabaseManagerInterface dataBaseManager) {
+    this.questionManager = questionManager;
+    curPair = questionManager.getNextPair().orElse(null);
+    this.id = id;
+    this.dataBaseManager = dataBaseManager;
   }
 
-  private void setNextQuestion() {
-    curPair = questionManager.getNextPair();
-    if (curPair == null) {
-      isGameContinued = false;
-      handleCommand("/stop");
-    }
+  Game(QuestionManagerInterface questionManager, DatabaseManagerInterface dataBaseManager) {
+    this.questionManager = questionManager;
+    curPair = questionManager.getNextPair().orElse(null);
+    this.dataBaseManager = dataBaseManager;
+  }
+
+  private void nextQuestion() {
+    curPair = questionManager.getNextPair()
+    .orElseGet(() -> {
+      stopGame();
+      return null;
+    });
   }
 
   String getCurrentQuestion() {
-    return curPair.question;
+    return curPair.getQuestion();
   }
 
-  String checkAnswer(String answer) {
-    if (answer.equals(curPair.answer)) {
+  Integer getCurrentPairId() {
+    return curPair.getId();
+  }
+
+  boolean checkAnswer(String answer) {
+    if (answer.equalsIgnoreCase(curPair.getAnswer())) {
       score++;
-      setNextQuestion();
-      return "Правильный ответ";
-    } else
-      return "Неправильный ответ";
-  }
-
-  String handleCommand(String command) {
-    String res;
-    switch (command) {
-      case "/score":
-        res = "Ваш счет: " + getScore();
-        break;
-      case "/help":
-        res =  getHelp();
-        break;
-      case "/stop":
-        isGameContinued = false;
-        res = "До встречи";
-        break;
-      default:
-        res = "Неизвестная команда";
+      nextQuestion();
+      dataBaseManager.updateGame(this);
+      return true;
     }
 
-    return "\n--- " + res + " ---\n";
+    return false;
   }
 
-  String getHelp() {
-    return "Команды: /help - справка, /score - узнать количество очков, /stop - остановить викторину";
+  int getScore() {
+    return score;
   }
 
-  String getScore() {
-    return Integer.toString(score);
+  void stopGame() {
+    isGameContinued = false;
+  }
+
+  void setDataBaseManager(DatabaseManagerInterface dataBaseManager) {
+    this.dataBaseManager = dataBaseManager;
   }
 }
