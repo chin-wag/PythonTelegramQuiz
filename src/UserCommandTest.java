@@ -24,6 +24,6 @@ class UserCommandTest {
               "Команды: /score - узнать количество очков, /help - справка, /stop - остановить " +
               "викторину",
               UserCommand.HELP.execute(
-                      new Game(new QuestionManagerMock(new QuestionAnswerPair("2+2", "4")))));
+                      new Game(new QuestionManagerMock(new QuestionAnswerPair("2+2", "4")), new DatabaseManagerMock())));
   }
 }
