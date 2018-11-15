@@ -10,13 +10,13 @@ class QuestionManager implements QuestionManagerInterface {
   private ArrayList<QuestionAnswerPair> questions;
   private Integer currentIndex;
 
-  QuestionManager(Long id) throws DataHandlingException{
-    questions = DataBaseManager.getData(id);
+  QuestionManager(Long id, DatabaseManagerInterface dataBaseManager) throws DataHandlingException {
+    questions = dataBaseManager.getData(id);
     currentIndex = 0;
   }
 
-  QuestionManager() throws DataHandlingException {
-    this((long)1);
+  QuestionManager(DatabaseManager dataBaseManager) throws DataHandlingException {
+    this((long)1, dataBaseManager);
   }
 
   public Optional<QuestionAnswerPair> getNextPair() {
