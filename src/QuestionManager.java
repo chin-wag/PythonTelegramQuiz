@@ -27,4 +27,3 @@ class QuestionManager implements QuestionManagerInterface {
     return result;
   }
 }
-
