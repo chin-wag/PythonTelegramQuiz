@@ -7,14 +7,20 @@ public class ConsoleInterface {
   private static Game game;
 
   public static void main(String[] args) {
+    var databaseManager = new DatabaseManager();
     try {
-      game = new Game(new QuestionManager());
+      game = new Game(new QuestionManager(databaseManager),(long)-1, databaseManager);
     } catch (DataHandlingException e){
       System.out.println(e.getMessage());
       return;
     }
     salute();
     play();
+
+    try {
+      game = null;
+      databaseManager.removeGame((long)-1);
+    } catch (DataHandlingException e) {/*game is already not in database*/}
   }
 
   private static void play() {
@@ -35,12 +41,12 @@ public class ConsoleInterface {
   private static void doStep() {
     out.println("Вопрос: " + game.getCurrentQuestion());
     out.print("Ваш ответ: ");
-    var curInput = in.nextLine();
+    var currentInput = in.nextLine();
 
-    if (UserCommand.isUserInputCommand(curInput)) {
-      handleUserCommand(curInput);
+    if (UserCommand.isUserInputCommand(currentInput)) {
+      handleUserCommand(currentInput);
     } else {
-      out.println(game.checkAnswer(curInput));
+      out.println(game.checkAnswer(currentInput));
       out.println();
     }
   }
