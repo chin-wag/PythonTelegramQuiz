@@ -1,4 +1,7 @@
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 @Entity
 class Game {
