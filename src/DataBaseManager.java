@@ -31,7 +31,7 @@ class DataBaseManager {
       if (em != null)
         em.close();
       if (emf != null)
-      emf.close();
+        emf.close();
     }
     return data;
   }
