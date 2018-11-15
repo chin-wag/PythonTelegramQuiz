@@ -13,18 +13,22 @@ class Game {
   private QuestionManagerInterface questionManager;
   @Transient
   Boolean isGameContinued = true;
+  @Transient
+  private DatabaseManagerInterface dataBaseManager;
 
   public Game() {}
 
-  Game(QuestionManagerInterface questionManager, Long id) {
+  Game(QuestionManagerInterface questionManager, Long id, DatabaseManagerInterface dataBaseManager) {
     this.questionManager = questionManager;
     curPair = questionManager.getNextPair().orElse(null);
     this.id = id;
+    this.dataBaseManager = dataBaseManager;
   }
 
-  Game(QuestionManagerInterface questionManager) {
+  Game(QuestionManagerInterface questionManager, DatabaseManagerInterface dataBaseManager) {
     this.questionManager = questionManager;
     curPair = questionManager.getNextPair().orElse(null);
+    this.dataBaseManager = dataBaseManager;
   }
 
   private void nextQuestion() {
@@ -47,7 +51,7 @@ class Game {
     if (answer.equalsIgnoreCase(curPair.getAnswer())) {
       score++;
       nextQuestion();
-      DataBaseManager.updateGame(this);
+      dataBaseManager.updateGame(this);
       return true;
     }
 
@@ -60,5 +64,9 @@ class Game {
 
   void stopGame() {
     isGameContinued = false;
+  }
+
+  void setDataBaseManager(DatabaseManagerInterface dataBaseManager) {
+    this.dataBaseManager = dataBaseManager;
   }
 }
