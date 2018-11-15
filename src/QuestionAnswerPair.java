@@ -6,8 +6,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name="questions_and_answers")
-class QuestionAnswerPair implements Serializable
-{
+class QuestionAnswerPair implements Serializable {
   @Id
   @GeneratedValue
   private Integer id;
