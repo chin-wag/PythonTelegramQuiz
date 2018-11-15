@@ -1,10 +1,20 @@
 import java.util.Optional;
 
 class GameManager {
+  private DatabaseManagerInterface databaseManager;
+
+  GameManager(DatabaseManagerInterface databaseManager) {
+    this.databaseManager = databaseManager;
+  }
+
+  GameManager() {
+    databaseManager = new DatabaseManager();
+  }
+
   private void addNewUser(Long id) {
       try {
-        var game = new Game(new QuestionManager(id), id);
-        DataBaseManager.saveGame(game);
+        var game = new Game(new QuestionManager(id, databaseManager), id, databaseManager);
+        databaseManager.saveGame(game);
       } catch (DataHandlingException e) {
         System.out.println(e.getMessage());
       }
@@ -12,19 +22,19 @@ class GameManager {
 
   private void removeUser(Long id) {
     try {
-      DataBaseManager.removeGame(id);
+      databaseManager.removeGame(id);
     } catch (DataHandlingException e) {
       System.out.println(e.getMessage());
     }
   }
 
   private Boolean isNewUser(Long id) {
-    return !DataBaseManager.isGameExistent(id);
+    return !databaseManager.isGameExistent(id);
   }
 
   String getQuestion(Long id) {
     try {
-      return DataBaseManager.getExistentGame(id).getCurrentQuestion();
+      return databaseManager.getExistentGame(id).getCurrentQuestion();
     } catch (DataHandlingException e) {
       System.out.println(e.getMessage());
     }
@@ -40,12 +50,13 @@ class GameManager {
   String handleUserRequest(Long id, Optional<String> input) {
     if (isNewUser(id)) {
       addNewUser(id);
-      return salute() + "\n" + UserCommand.HELP.execute(DataBaseManager.getGame(id).get());
+      return salute() + "\n" + UserCommand.HELP.execute(databaseManager.getGame(id).get());
     }
 
     var userMessage = input.orElse("");
 
-    var currentGame = DataBaseManager.getGame(id).get();
+    var currentGame = databaseManager.getGame(id).get();
+    currentGame.setDataBaseManager(databaseManager);
     var answer  = "";
     if (currentGame.isGameContinued) {
       if (UserCommand.isUserInputCommand(userMessage)) {
@@ -75,7 +86,7 @@ class GameManager {
 
   Boolean isGameContinued(Long id) {
     try {
-      return DataBaseManager.getExistentGame(id).isGameContinued;
+      return databaseManager.getExistentGame(id).isGameContinued;
     } catch (DataHandlingException e) {
       System.out.println(e.getMessage());
     }
@@ -84,6 +95,6 @@ class GameManager {
   }
 
   Boolean isGameExistent(Long id) {
-    return DataBaseManager.isGameExistent(id);
+    return databaseManager.isGameExistent(id);
   }
 }
