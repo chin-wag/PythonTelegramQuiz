@@ -28,12 +28,10 @@ class DataBaseManager {
       throw new DataHandlingException(e);
     }
     finally {
-      try {
-        if (emf != null)
-          emf.close();
-        if (em != null)
-          em.close();
-      } catch (IllegalStateException e) {/*can't do anything*/}
+      if (em != null)
+        em.close();
+      if (emf != null)
+      emf.close();
     }
     return data;
   }
@@ -109,6 +107,4 @@ class DataBaseManager {
   static boolean isGameExistent(Long id) {
     return getGame(id).isPresent();
   }
-
-
 }
