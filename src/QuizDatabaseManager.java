@@ -14,7 +14,7 @@ interface DatabaseManager {
 
   default Game getExistentGame(long id) throws DataHandlingException {
     return getGame(id).orElseThrow(()->
-            new DataHandlingException("Game with id " + id + " is not in database"));
+            new DataHandlingException(String.format("Game with id %s is not in database", id)));
   }
 
   default boolean isGameExistent(long id)  {
