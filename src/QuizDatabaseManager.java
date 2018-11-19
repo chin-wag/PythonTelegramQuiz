@@ -2,31 +2,29 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 interface DatabaseManagerInterface {
-  ArrayList<QuestionAnswerPair> getData(Long id) throws DataHandlingException;
+  List<QuestionAnswerPair> getData(long id) throws DataHandlingException;
   void updateGame(Game game);
   void saveGame(Game game);
-  void removeGame(Long id) throws DataHandlingException;
-  Optional<Game> getGame(Long id);
-  Game getExistentGame(Long id) throws DataHandlingException;
-  boolean isGameExistent(Long id);
+  void removeGame(long id) throws DataHandlingException;
+  Optional<Game> getGame(long id);
+  Game getExistentGame(long id) throws DataHandlingException;
+  boolean isGameExistent(long id);
 }
 
 class DatabaseManager implements DatabaseManagerInterface {
   private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("QuizUnit");
   private EntityManager em = emf.createEntityManager();
 
-  public ArrayList<QuestionAnswerPair> getData(Long id) throws DataHandlingException {
+  public List<QuestionAnswerPair> getData(long id) throws DataHandlingException {
     var data = new ArrayList<QuestionAnswerPair>();
     try {
-      Integer startIndex;
-      try {
-        startIndex = em.find(Game.class, id).getCurrentPairId();
-      } catch (NullPointerException e) {
-        startIndex = 1;
-      }
+      var startIndex = getGame(id)
+              .map(Game::getCurrentPairId)
+              .orElse(1);
       var query = em.createQuery("select p from QuestionAnswerPair p where p.id >= :startIndex");
       query.setParameter("startIndex", startIndex);
       data.addAll(query.getResultList());
@@ -51,10 +49,8 @@ class DatabaseManager implements DatabaseManagerInterface {
     tx.commit();
   }
 
-  public void removeGame(Long id) throws DataHandlingException {
-    var existentGame = getGame(id).orElseThrow(()->
-            new DataHandlingException("Game with id " + id.toString() + " is not in database"));
-
+  public void removeGame(long id) throws DataHandlingException {
+    var existentGame = getExistentGame(id);
     var tx = em.getTransaction();
     tx.begin();
 
@@ -65,16 +61,16 @@ class DatabaseManager implements DatabaseManagerInterface {
     tx.commit();
   }
 
-  public Optional<Game> getGame(Long id) {
+  public Optional<Game> getGame(long id) {
     return Optional.ofNullable(em.find(Game.class, id));
   }
 
-  public Game getExistentGame(Long id) throws DataHandlingException {
+  public Game getExistentGame(long id) throws DataHandlingException {
     return getGame(id).orElseThrow(()->
-            new DataHandlingException("Game with id " + id.toString() + " is not in database"));
+            new DataHandlingException("Game with id " + id + " is not in database"));
   }
 
-  public boolean isGameExistent(Long id) {
+  public boolean isGameExistent(long id) {
     return getGame(id).isPresent();
   }
 }

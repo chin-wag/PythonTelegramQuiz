@@ -1,5 +1,5 @@
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 interface QuestionManagerInterface extends Serializable {
@@ -7,8 +7,8 @@ interface QuestionManagerInterface extends Serializable {
 }
 
 class QuestionManager implements QuestionManagerInterface {
-  private ArrayList<QuestionAnswerPair> questions;
-  private Integer currentIndex;
+  private List<QuestionAnswerPair> questions;
+  private int currentIndex;
 
   QuestionManager(Long id, DatabaseManagerInterface dataBaseManager) throws DataHandlingException {
     questions = dataBaseManager.getData(id);
