@@ -7,28 +7,24 @@ import javax.persistence.Transient;
 class Game {
   @Id
   private long id;
-  private Integer score = 0;
+  private int score = 0;
   @OneToOne
   private QuestionAnswerPair curPair;
-  private QuestionManagerInterface questionManager;
+  private QuestionManager questionManager;
   @Transient
-  Boolean isGameContinued = true;
-  @Transient
-  private DatabaseManagerInterface dataBaseManager;
+  private boolean isGameContinued = true;
 
   public Game() {}
 
-  Game(QuestionManagerInterface questionManager, Long id, DatabaseManagerInterface dataBaseManager) {
+  Game(QuestionManager questionManager, long id) {
     this.questionManager = questionManager;
     curPair = questionManager.getNextPair().orElse(null);
     this.id = id;
-    this.dataBaseManager = dataBaseManager;
   }
 
-  Game(QuestionManagerInterface questionManager, DatabaseManagerInterface dataBaseManager) {
+  Game(QuestionManager questionManager) {
     this.questionManager = questionManager;
     curPair = questionManager.getNextPair().orElse(null);
-    this.dataBaseManager = dataBaseManager;
   }
 
   private void nextQuestion() {
@@ -43,7 +39,7 @@ class Game {
     return curPair.getQuestion();
   }
 
-  Integer getCurrentPairId() {
+  int getCurrentPairId() {
     return curPair.getId();
   }
 
@@ -51,7 +47,6 @@ class Game {
     if (answer.equalsIgnoreCase(curPair.getAnswer())) {
       score++;
       nextQuestion();
-      dataBaseManager.updateGame(this);
       return true;
     }
 
@@ -66,7 +61,5 @@ class Game {
     isGameContinued = false;
   }
 
-  void setDataBaseManager(DatabaseManagerInterface dataBaseManager) {
-    this.dataBaseManager = dataBaseManager;
-  }
+  boolean isGameContinued() { return isGameContinued; }
 }
