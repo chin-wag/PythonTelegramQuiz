@@ -1,6 +1,6 @@
 import java.util.Optional;
 
-class QuestionManagerMock implements QuestionManagerInterface {
+class QuestionManagerMock implements QuestionManager {
   private QuestionAnswerPair pair;
 
   QuestionManagerMock(QuestionAnswerPair questionAnswerPair) {
