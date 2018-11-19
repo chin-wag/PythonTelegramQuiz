@@ -5,17 +5,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-interface DatabaseManagerInterface {
+interface DatabaseManager {
   List<QuestionAnswerPair> getData(long id) throws DataHandlingException;
   void updateGame(Game game);
   void saveGame(Game game);
   void removeGame(long id) throws DataHandlingException;
   Optional<Game> getGame(long id);
-  Game getExistentGame(long id) throws DataHandlingException;
-  boolean isGameExistent(long id);
+
+  default Game getExistentGame(long id) throws DataHandlingException {
+    return getGame(id).orElseThrow(()->
+            new DataHandlingException("Game with id " + id + " is not in database"));
+  }
+
+  default boolean isGameExistent(long id)  {
+    return getGame(id).isPresent();
+  }
 }
 
-class DatabaseManager implements DatabaseManagerInterface {
+class QuizDatabaseManager implements DatabaseManager {
   private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("QuizUnit");
   private EntityManager em = emf.createEntityManager();
 
@@ -63,14 +70,5 @@ class DatabaseManager implements DatabaseManagerInterface {
 
   public Optional<Game> getGame(long id) {
     return Optional.ofNullable(em.find(Game.class, id));
-  }
-
-  public Game getExistentGame(long id) throws DataHandlingException {
-    return getGame(id).orElseThrow(()->
-            new DataHandlingException("Game with id " + id + " is not in database"));
-  }
-
-  public boolean isGameExistent(long id) {
-    return getGame(id).isPresent();
   }
 }
