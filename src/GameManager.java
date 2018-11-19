@@ -1,45 +1,31 @@
 import java.util.Optional;
 
 class GameManager {
-  private DatabaseManagerInterface databaseManager;
+  private DatabaseManager databaseManager;
 
-  GameManager(DatabaseManagerInterface databaseManager) {
+  GameManager(DatabaseManager databaseManager) {
     this.databaseManager = databaseManager;
   }
 
   GameManager() {
-    databaseManager = new DatabaseManager();
+    databaseManager = new QuizDatabaseManager();
   }
 
-  private void addNewUser(Long id) {
-      try {
-        var game = new Game(new QuestionManager(id, databaseManager), id, databaseManager);
-        databaseManager.saveGame(game);
-      } catch (DataHandlingException e) {
-        System.out.println(e.getMessage());
-      }
+  private void addNewUser(long id) throws DataHandlingException {
+    var game = new Game(new QuizQuestionManager(id, databaseManager), id);
+    databaseManager.saveGame(game);
   }
 
-  private void removeUser(Long id) {
-    try {
+  private void removeUser(long id) throws DataHandlingException {
       databaseManager.removeGame(id);
-    } catch (DataHandlingException e) {
-      System.out.println(e.getMessage());
-    }
   }
 
-  private Boolean isNewUser(Long id) {
+  private boolean isNewUser(long id) {
     return !databaseManager.isGameExistent(id);
   }
 
-  String getQuestion(Long id) {
-    try {
-      return databaseManager.getExistentGame(id).getCurrentQuestion();
-    } catch (DataHandlingException e) {
-      System.out.println(e.getMessage());
-    }
-
-    return "";
+  String getQuestion(long id) throws DataHandlingException {
+    return databaseManager.getExistentGame(id).getCurrentQuestion();
   }
 
   private String salute() {
@@ -47,28 +33,41 @@ class GameManager {
             "За каждый правильный ответ получаете очки. Начинаем!";
   }
 
-  String handleUserRequest(Long id, Optional<String> input) {
+  String handleUserRequest(long id, Optional<String> input) {
     if (isNewUser(id)) {
+      try {
       addNewUser(id);
       return salute() + "\n" + UserCommand.HELP.execute(databaseManager.getGame(id).get());
-    }
-
-    var userMessage = input.orElse("");
-
-    var currentGame = databaseManager.getGame(id).get();
-    currentGame.setDataBaseManager(databaseManager);
-    var answer  = "";
-    if (currentGame.isGameContinued) {
-      if (UserCommand.isUserInputCommand(userMessage)) {
-        answer = handleUserCommand(currentGame, userMessage);
-      } else {
-        answer = Boolean.toString(currentGame.checkAnswer(userMessage));
+      } catch (DataHandlingException e) {
+        System.out.println(e.toString());
+        return Answers.ERROR.getMessage();
       }
     }
 
-    if (!currentGame.isGameContinued) {
-      answer += "\nВикторина окончена. Количество очков - " + currentGame.getScore();
-      removeUser(id);
+    var userMessage = input.orElse("");
+    var currentGame = databaseManager.getGame(id).get();
+    var answer  = "";
+
+    if (currentGame.isGameContinued()) {
+      if (UserCommand.isUserInputCommand(userMessage)) {
+        answer = handleUserCommand(currentGame, userMessage);
+      } else {
+        var isAnswerCorrect = currentGame.checkAnswer(userMessage);
+        if (isAnswerCorrect) {
+          databaseManager.updateGame(currentGame);
+        }
+        answer = isAnswerCorrect ? Answers.CORRECT.getMessage() : Answers.INCORRECT.getMessage();
+      }
+    }
+
+    if (!currentGame.isGameContinued()) {
+      try {
+        answer += String.format("\nВикторина окончена. Количество очков - %s", currentGame.getScore());
+        removeUser(id);
+      } catch (DataHandlingException e) {
+        System.out.println(e.toString());
+        return Answers.ERROR.getMessage();
+      }
     }
 
     return answer;
@@ -76,25 +75,25 @@ class GameManager {
 
   private String handleUserCommand(Game game, String userInput) {
     var userCommand = userInput.substring(1).toUpperCase();
-    if (UserCommand.isValidUserCommand(userCommand)){
+    if (UserCommand.isValidUserCommand(userCommand)) {
       var command = UserCommand.valueOf(userCommand);
       return command.execute(game);
     } else {
-      return "Команды " + userInput + " не существует";
+      return String.format("Команды %s не существует", userCommand);
     }
   }
 
-  Boolean isGameContinued(Long id) {
+  boolean isGameContinued(long id) {
     try {
-      return databaseManager.getExistentGame(id).isGameContinued;
+      return databaseManager.getExistentGame(id).isGameContinued();
     } catch (DataHandlingException e) {
-      System.out.println(e.getMessage());
+      System.out.println(e.toString());
     }
 
     return false;
   }
 
-  Boolean isGameExistent(Long id) {
+  boolean isGameExistent(long id) {
     return databaseManager.isGameExistent(id);
   }
 }

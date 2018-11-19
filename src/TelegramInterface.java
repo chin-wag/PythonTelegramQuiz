@@ -14,12 +14,20 @@ public class TelegramInterface extends TelegramLongPollingBot {
     var message = Optional.ofNullable(update.getMessage().getText());
     var answer = gameManager.handleUserRequest(currentId, message);
     sendMessageToUser(currentId, answer);
+
     if (gameManager.isGameExistent(currentId) && gameManager.isGameContinued(currentId)) {
-      sendMessageToUser(currentId, gameManager.getQuestion(update.getMessage().getChatId()));
+      String messageToSend;
+      try {
+        messageToSend = gameManager.getQuestion(update.getMessage().getChatId());
+      } catch (DataHandlingException e) {
+        System.out.println(e.toString());
+        messageToSend = Answers.ERROR.getMessage();
+      }
+      sendMessageToUser(currentId, messageToSend);
     }
   }
 
-  private void sendMessageToUser(Long id, String text) {
+  private void sendMessageToUser(long id, String text) {
     var sendMessage = new SendMessage();
     sendMessage.setChatId(id);
     sendMessage.setText(text);

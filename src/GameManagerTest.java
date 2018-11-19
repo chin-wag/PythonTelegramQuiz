@@ -37,6 +37,21 @@ class GameManagerTest {
   }
 
   @Test
+  void testWrongAnswer() {
+    var dataBaseMock = new DatabaseManagerMock();
+    var gameManager = new GameManager(dataBaseMock);
+    gameManager.handleUserRequest(id, Optional.of(" "));
+
+    var expectedScore = dataBaseMock.getGame(id).get().getScore();
+    var expectedPairId = dataBaseMock.getGame(id).get().getCurrentPairId();
+
+    gameManager.handleUserRequest(id, Optional.of("0"));
+    var game = dataBaseMock.getGame(id);
+    assertEquals(expectedScore, game.get().getScore());
+    assertEquals(expectedPairId, game.get().getCurrentPairId());
+  }
+
+  @Test
   void testNoScoreIncrementIfWrongAnswer() {
     var dataBaseMock = new DatabaseManagerMock();
     var gameManager = new GameManager(dataBaseMock);

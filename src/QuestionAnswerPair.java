@@ -9,7 +9,7 @@ import java.io.Serializable;
 class QuestionAnswerPair implements Serializable {
   @Id
   @GeneratedValue
-  private Integer id;
+  private int id;
   private String question;
   private String answer;
 
@@ -28,5 +28,5 @@ class QuestionAnswerPair implements Serializable {
     return answer;
   }
 
-  Integer getId() { return id; }
+  int getId() { return id; }
 }
