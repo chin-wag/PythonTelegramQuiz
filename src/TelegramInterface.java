@@ -19,7 +19,7 @@ public class TelegramInterface extends TelegramLongPollingBot {
     }
   }
 
-  private void sendMessageToUser(Long id, String text) {
+  private void sendMessageToUser(long id, String text) {
     var sendMessage = new SendMessage();
     sendMessage.setChatId(id);
     sendMessage.setText(text);
