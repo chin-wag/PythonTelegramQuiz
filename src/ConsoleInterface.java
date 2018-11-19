@@ -5,11 +5,11 @@ public class ConsoleInterface {
   private static Scanner in = new Scanner(System.in);
   private static PrintStream out = new PrintStream(System.out);
   private static Game game;
+  private static QuizDatabaseManager databaseManager = new QuizDatabaseManager();
 
   public static void main(String[] args) {
-    var databaseManager = new DatabaseManager();
     try {
-      game = new Game(new QuestionManager(databaseManager),(long)-1, databaseManager);
+      game = new Game(new QuizQuestionManager(databaseManager),(long)-1);
     } catch (DataHandlingException e){
       System.out.println(e.getMessage());
       return;
@@ -32,7 +32,7 @@ public class ConsoleInterface {
       Thread.currentThread().interrupt();
     }
 
-    while (game.isGameContinued)
+    while (game.isGameContinued())
       doStep();
 
     out.println("Викторина окончена. Количество очков - " + game.getScore());
@@ -46,7 +46,11 @@ public class ConsoleInterface {
     if (UserCommand.isUserInputCommand(currentInput)) {
       handleUserCommand(currentInput);
     } else {
-      out.println(game.checkAnswer(currentInput));
+      var isAnswerCorrect = game.checkAnswer(currentInput);
+      if (isAnswerCorrect) {
+        databaseManager.updateGame(game);
+      }
+      out.println(isAnswerCorrect ? Answers.CORRECT.getMessage() : Answers.INCORRECT.getMessage());
       out.println();
     }
   }
@@ -58,7 +62,7 @@ public class ConsoleInterface {
 
   private static void handleUserCommand(String userInput){
     var userCommand = userInput.substring(1).toUpperCase();
-    if(UserCommand.isValidUserCommand(userCommand)){
+    if (UserCommand.isValidUserCommand(userCommand)){
       var command = UserCommand.valueOf(userCommand);
       out.println(command.execute(game));
     } else {
