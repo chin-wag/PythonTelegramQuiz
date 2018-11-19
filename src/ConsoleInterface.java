@@ -35,7 +35,7 @@ public class ConsoleInterface {
     while (game.isGameContinued())
       doStep();
 
-    out.println("Викторина окончена. Количество очков - " + game.getScore());
+    out.println(String.format("Викторина окончена. Количество очков - %s", game.getScore()));
   }
 
   private static void doStep() {
@@ -66,7 +66,7 @@ public class ConsoleInterface {
       var command = UserCommand.valueOf(userCommand);
       out.println(command.execute(game));
     } else {
-      out.println("Команды " + userInput + " не существует");
+      out.println(String.format("Команды %s не существует", userCommand));
     }
   }
 }
