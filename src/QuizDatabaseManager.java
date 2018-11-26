@@ -27,19 +27,16 @@ class QuizDatabaseManager implements DatabaseManager {
   private EntityManager em = emf.createEntityManager();
 
   public List<QuestionAnswerPair> getData(long id) throws DataHandlingException {
-    var data = new ArrayList<QuestionAnswerPair>();
     try {
       var startIndex = getGame(id)
               .map(Game::getCurrentPairId)
               .orElse(1);
       var query = em.createQuery("select p from QuestionAnswerPair p where p.id >= :startIndex");
       query.setParameter("startIndex", startIndex);
-      data.addAll(query.getResultList());
+      return query.getResultList();
     } catch (Exception e) {
       throw new DataHandlingException(e);
     }
-
-    return data;
   }
 
   public void saveGame(Game game) {
