@@ -1,8 +1,11 @@
+package test.java;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Arrays;
+import main.java.*;
 
 class DatabaseManagerMock implements DatabaseManager {
   private Map<Long, Game> games = new HashMap<>();

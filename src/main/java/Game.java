@@ -1,10 +1,12 @@
+package main.java;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
-class Game {
+public class Game {
   @Id
   private long id;
   private int score = 0;
@@ -23,7 +25,7 @@ class Game {
     this.id = id;
   }
 
-  Game(QuestionManager questionManager) {
+  public Game(QuestionManager questionManager) {
     this.questionManager = questionManager;
     curPair = questionManager.getNextPair().orElse(null);
   }
@@ -36,15 +38,15 @@ class Game {
     });
   }
 
-  String getCurrentQuestion() {
+  public String getCurrentQuestion() {
     return curPair.getQuestion();
   }
 
-  int getCurrentPairId() {
+  public int getCurrentPairId() {
     return curPair.getId();
   }
 
-  boolean checkAnswer(String answer) {
+  public boolean checkAnswer(String answer) {
     if (answer.equalsIgnoreCase(curPair.getAnswer())) {
       score++;
       nextQuestion();
@@ -54,15 +56,15 @@ class Game {
     return false;
   }
 
-  int getScore() {
+  public int getScore() {
     return score;
   }
 
-  void stopGame() {
+  public void stopGame() {
     isGameContinued = false;
   }
 
-  boolean isGameContinued() { return isGameContinued; }
+  public boolean isGameContinued() { return isGameContinued; }
 
   long getId() { return id; }
 }

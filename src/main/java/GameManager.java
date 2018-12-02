@@ -1,13 +1,15 @@
+package main.java;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-class GameManager {
+public class GameManager {
   static List<Long> adminsIds = Arrays.asList((long)185902976, (long)-1);
   private DatabaseManager databaseManager;
 
-  GameManager(DatabaseManager databaseManager) {
+  public GameManager(DatabaseManager databaseManager) {
     this.databaseManager = databaseManager;
   }
 
@@ -37,7 +39,7 @@ class GameManager {
             "За каждый правильный ответ получаете очки. Начинаем!";
   }
 
-  String handleUserRequest(long id, Optional<String> input) {
+  public String handleUserRequest(long id, Optional<String> input) {
     if (isNewUser(id)) {
       try {
       addNewUser(id);

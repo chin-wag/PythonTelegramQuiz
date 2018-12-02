@@ -1,10 +1,12 @@
+package main.java;
+
 import java.util.ArrayList;
 
-enum UserCommand {
+public enum UserCommand {
   SCORE {
     String getDescription() { return "узнать количество очков"; }
 
-    String execute(Game game) {
+    public String execute(Game game) {
       return "Ваш счёт: " + game.getScore();
     }
   },
@@ -13,7 +15,7 @@ enum UserCommand {
       return "справка";
     }
 
-    String execute(Game game) {
+    public String execute(Game game) {
       return "Команды: " + createCommandsDescription();
     }
 
@@ -34,7 +36,7 @@ enum UserCommand {
       return "остановить викторину";
     }
 
-    String execute(Game game) {
+    public String execute(Game game) {
       game.stopGame();
       return "Игра закончена по желанию игрока.";
     }
@@ -42,13 +44,13 @@ enum UserCommand {
 
   abstract String getDescription();
 
-  abstract String execute(Game game);
+  public abstract String execute(Game game);
 
-  static boolean isUserInputCommand(String text) {
+  public static boolean isUserInputCommand(String text) {
     return text.length() > 0 && text.charAt(0) == '/';
   }
 
-  static boolean isValidUserCommand(String text){
+  public static boolean isValidUserCommand(String text){
     for (UserCommand command : UserCommand.values()) {
       if (command.name().equals(text)) {
         return true;

@@ -1,3 +1,5 @@
+package main.java;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -6,14 +8,14 @@ import java.io.Serializable;
 
 @Entity
 @Table(name="questions_and_answers")
-class QuestionAnswerPair implements Serializable {
+public class QuestionAnswerPair implements Serializable {
   @Id
   @GeneratedValue
   private int id;
   private String question;
   private String answer;
 
-  QuestionAnswerPair(String question, String answer) {
+  public QuestionAnswerPair(String question, String answer) {
     this.question = question;
     this.answer = answer;
   }

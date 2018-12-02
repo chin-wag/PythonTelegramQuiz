@@ -1,10 +1,8 @@
+package main.java;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-
-interface QuestionManager extends Serializable {
-  Optional<QuestionAnswerPair> getNextPair();
-}
 
 class QuizQuestionManager implements QuestionManager {
   private List<QuestionAnswerPair> questions;

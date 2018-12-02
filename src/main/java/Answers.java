@@ -1,3 +1,5 @@
+package main.java;
+
 enum Answers {
   CORRECT("Правильный ответ") {},
   INCORRECT ("Неправильный ответ") {},

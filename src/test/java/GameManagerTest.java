@@ -1,6 +1,9 @@
+package test.java;
+
 import org.junit.jupiter.api.Test;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
+import main.java.*;
 
 class GameManagerTest {
   private static long id = 0;

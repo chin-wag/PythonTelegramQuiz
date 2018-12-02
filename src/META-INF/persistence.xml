@@ -7,8 +7,8 @@
     <persistence-unit name="QuizUnit">
         <!--<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>-->
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <class>Game</class>
-        <class>QuestionAnswerPair</class>
+        <class>main.java.Game</class>
+        <class>main.java.QuestionAnswerPair</class>
         <properties>
             <property name="javax.persistence.schema-generation.database.action"
                       value="create"/>
