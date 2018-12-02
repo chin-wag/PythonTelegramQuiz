@@ -1,6 +1,10 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 class GameManager {
+  static List<Long> adminsIds = Arrays.asList((long)185902976, (long)-1);
   private DatabaseManager databaseManager;
 
   GameManager(DatabaseManager databaseManager) {
@@ -48,6 +52,10 @@ class GameManager {
     var currentGame = databaseManager.getGame(id).get();
     var answer  = "";
 
+    if (EditModeCommand.isUserInputStartingEditMode(userMessage, currentGame) || currentGame.isEditMode) {
+        return handleEditModeCommand(currentGame, userMessage);
+    }
+
     if (currentGame.isGameContinued()) {
       if (UserCommand.isUserInputCommand(userMessage)) {
         answer = handleUserCommand(currentGame, userMessage);
@@ -80,6 +88,17 @@ class GameManager {
       return command.execute(game);
     } else {
       return String.format("Команды %s не существует", userCommand);
+    }
+  }
+
+  private String handleEditModeCommand(Game game, String userInput) {
+    var arguments = userInput.split(" ");
+    var editModeCommand = arguments[0].substring(1).toUpperCase();
+    if (EditModeCommand.isValidEditModeCommand(editModeCommand, game)) {
+      var command = EditModeCommand.valueOf(editModeCommand);
+      return command.execute(game, String.join(" ", Arrays.copyOfRange(arguments, 1, arguments.length)));
+    } else {
+      return String.format("Команды %s не существует", arguments[0]);
     }
   }
 
