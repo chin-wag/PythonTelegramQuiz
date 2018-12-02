@@ -1,4 +1,5 @@
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ConsoleInterface {
@@ -39,9 +40,16 @@ public class ConsoleInterface {
   }
 
   private static void doStep() {
-    out.println("Вопрос: " + game.getCurrentQuestion());
-    out.print("Ваш ответ: ");
+    if (!game.isEditMode) {
+      out.println("Вопрос: " + game.getCurrentQuestion());
+      out.print("Ваш ответ: ");
+    }
     var currentInput = in.nextLine();
+
+    if (EditModeCommand.isUserInputStartingEditMode(currentInput, game) || game.isEditMode) {
+      out.println(handleEditModeCommand(game, currentInput));
+      return;
+    }
 
     if (UserCommand.isUserInputCommand(currentInput)) {
       handleUserCommand(currentInput);
@@ -67,6 +75,17 @@ public class ConsoleInterface {
       out.println(command.execute(game));
     } else {
       out.println(String.format("Команды %s не существует", userCommand));
+    }
+  }
+
+  private static String handleEditModeCommand(Game game, String userInput) {
+    var arguments = userInput.split(" ");
+    var editModeCommand = arguments[0].substring(1).toUpperCase();
+    if (EditModeCommand.isValidEditModeCommand(editModeCommand, game)) {
+      var command = EditModeCommand.valueOf(editModeCommand);
+      return command.execute(game, String.join(" ", Arrays.copyOfRange(arguments, 1, arguments.length)));
+    } else {
+      return String.format("Команды %s не существует", arguments[0]);
     }
   }
 }
