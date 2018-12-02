@@ -28,5 +28,9 @@ class QuestionAnswerPair implements Serializable {
     return answer;
   }
 
+  void setQuestion(String question) { this.question = question; }
+
+  void setAnswer(String answer) { this.answer = answer; }
+
   int getId() { return id; }
 }
