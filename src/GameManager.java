@@ -115,4 +115,12 @@ class GameManager {
   boolean isGameExistent(long id) {
     return databaseManager.isGameExistent(id);
   }
+
+  boolean isGameEditMode(long id) {
+    try {
+      return databaseManager.getExistentGame(id).isEditMode;
+    } catch (DataHandlingException e) {
+      return false;
+    }
+  }
 }
