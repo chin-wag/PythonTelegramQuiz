@@ -13,6 +13,7 @@ class Game {
   private QuestionManager questionManager;
   @Transient
   private boolean isGameContinued = true;
+  boolean isEditMode = false;
 
   public Game() {}
 
@@ -62,4 +63,6 @@ class Game {
   }
 
   boolean isGameContinued() { return isGameContinued; }
+
+  long getId() { return id; }
 }
