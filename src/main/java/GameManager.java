@@ -1,12 +1,11 @@
 package main.java;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class GameManager {
-  static List<Long> adminsIds = Arrays.asList((long)185902976, (long)-1);
+  static List<Long> adminsIds = Arrays.asList((long)185902976, (long)219230796, (long)-1);
   private DatabaseManager databaseManager;
 
   public GameManager(DatabaseManager databaseManager) {
