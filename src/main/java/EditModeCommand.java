@@ -43,7 +43,7 @@ enum EditModeCommand {
   },
   ADD {
     String getDescription() {
-      return "добавить новый вопрос";
+      return "добавить новый вопрос; аргументы - вопрос, ответ";
     }
 
     String execute(Game game, String query) {
@@ -57,7 +57,7 @@ enum EditModeCommand {
   },
   DELETE {
     String getDescription() {
-      return "удалить существующий вопрос";
+      return "удалить существующий вопрос; аргументы - id";
     }
 
     String execute(Game game, String query) {
@@ -77,7 +77,7 @@ enum EditModeCommand {
   },
   MODIFY {
     String getDescription() {
-      return "изменить существующий вопрос";
+      return "изменить существующий вопрос; аргументы - id, вопрос, ответ";
     }
 
     String execute(Game game, String query) {
@@ -123,10 +123,6 @@ enum EditModeCommand {
   abstract String getDescription();
 
   abstract String execute(Game game, String query);
-
-  static boolean isUserInputCommand(String text) {
-    return text.length() > 0 && text.charAt(0) == '/';
-  }
 
   static boolean isValidEditModeCommand(String text, Game game){
     if (!GameManager.adminsIds.contains(game.getId())) {
