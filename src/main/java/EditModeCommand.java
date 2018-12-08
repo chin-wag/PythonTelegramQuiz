@@ -142,6 +142,8 @@ enum EditModeCommand {
     if (!GameManager.adminsIds.contains(game.getId())) {
       return false;
     }
-    return text.toUpperCase().substring(1).startsWith(EDIT.name());
+    return text.toUpperCase()
+            .substring(1)
+            .startsWith(EDIT.name());
   }
 }

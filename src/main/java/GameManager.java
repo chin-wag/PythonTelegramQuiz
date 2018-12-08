@@ -2,7 +2,6 @@ package main.java;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class GameManager {
   static List<Long> adminsIds = Arrays.asList((long)185902976, (long)219230796, (long)-1);
@@ -38,23 +37,22 @@ public class GameManager {
             "За каждый правильный ответ получаете очки. Начинаем!";
   }
 
-  public String handleUserRequest(long id, Optional<String> input) {
+  public String handleUserRequest(long id, String userMessage) {
     if (isNewUser(id)) {
       try {
-      addNewUser(id);
-      return salute() + "\n" + UserCommand.HELP.execute(databaseManager.getGame(id).get());
+        addNewUser(id);
+        return salute() + "\n" + UserCommand.HELP.execute(databaseManager.getGame(id).get());
       } catch (DataHandlingException e) {
         System.out.println(e.toString());
         return Answers.ERROR.getMessage();
       }
     }
 
-    var userMessage = input.orElse("");
     var currentGame = databaseManager.getGame(id).get();
     var answer  = "";
 
     if (EditModeCommand.isUserInputStartingEditMode(userMessage, currentGame) || currentGame.isEditMode) {
-        return handleEditModeCommand(currentGame, userMessage);
+      return handleEditModeCommand(currentGame, userMessage);
     }
 
     if (currentGame.isGameContinued()) {
