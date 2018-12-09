@@ -1,9 +1,8 @@
 package main.java;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Game {
@@ -12,30 +11,43 @@ public class Game {
   private int score = 0;
   @OneToOne
   private QuestionAnswerPair curPair;
-  private QuestionManager questionManager;
+  @ManyToMany
+  private List<QuestionAnswerPair> pairs;
+  private int currentPairIndex;
   @Transient
   private boolean isGameContinued = true;
   boolean isEditMode = false;
 
   public Game() {}
 
-  Game(QuestionManager questionManager, long id) {
-    this.questionManager = questionManager;
-    curPair = questionManager.getNextPair().orElse(null);
+  Game(long id, DatabaseManager databaseManager) {
+    this(databaseManager);
     this.id = id;
   }
 
-  public Game(QuestionManager questionManager) {
-    this.questionManager = questionManager;
-    curPair = questionManager.getNextPair().orElse(null);
+  public Game(DatabaseManager databaseManager) {
+    try {
+      pairs = databaseManager.getData(id);
+      currentPairIndex = 0;
+    } catch (DataHandlingException e) {
+      pairs = new ArrayList<>();
+    }
+
+    if (pairs.size() > 0) {
+      curPair = pairs.get(currentPairIndex);
+      currentPairIndex++;
+    } else {
+      curPair = null;
+    }
   }
 
   private void nextQuestion() {
-    curPair = questionManager.getNextPair()
-    .orElseGet(() -> {
+    if (currentPairIndex < pairs.size()) {
+      curPair = pairs.get(currentPairIndex);
+      currentPairIndex++;
+    } else {
       stopGame();
-      return null;
-    });
+    }
   }
 
   public String getCurrentQuestion() {
