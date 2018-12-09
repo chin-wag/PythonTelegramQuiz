@@ -9,6 +9,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>main.java.Game</class>
         <class>main.java.QuestionAnswerPair</class>
+        <class>main.java.AdminId</class>
         <properties>
             <property name="javax.persistence.schema-generation.database.action"
                       value="create"/>
@@ -16,6 +17,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/quiz" />
             <property name="javax.persistence.jdbc.user" value="root" />
             <property name="javax.persistence.jdbc.password" value="12345" />
+            <!--<property name="javax.persistence.jdbc.password" value="id5n3w2s" />-->
         </properties>
     </persistence-unit>
 </persistence>

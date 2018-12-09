@@ -9,7 +9,11 @@ import java.util.Optional;
 public class QuestionAnswerPairDatabaseManager {
   private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("QuizUnit");
   private EntityManager em = emf.createEntityManager();
-  private GameDatabaseManager gameDatabaseManager = new GameDatabaseManager();
+  private GameDatabaseManager gameDatabaseManager;
+
+  QuestionAnswerPairDatabaseManager(GameDatabaseManager gameDatabaseManager) {
+    this.gameDatabaseManager = gameDatabaseManager;
+  }
 
   public void save(QuestionAnswerPair pair)
   {
