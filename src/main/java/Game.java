@@ -20,14 +20,14 @@ public class Game {
 
   public Game() {}
 
-  Game(long id, DatabaseManager databaseManager) {
+  Game(long id, QuestionAnswerPairDatabaseManager databaseManager) {
     this(databaseManager);
     this.id = id;
   }
 
-  public Game(DatabaseManager databaseManager) {
+  public Game(QuestionAnswerPairDatabaseManager databaseManager) {
     try {
-      pairs = databaseManager.getData(id);
+      pairs = databaseManager.getPairs(id);
       currentPairIndex = 0;
     } catch (DataHandlingException e) {
       pairs = new ArrayList<>();

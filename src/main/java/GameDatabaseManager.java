@@ -47,4 +47,8 @@ public class GameDatabaseManager {
     return get(id).orElseThrow(()->
             new DataHandlingException(String.format("Game with id %s is not in database", id)));
   }
+
+  boolean isGameExistent(long id)  {
+    return get(id).isPresent();
+  }
 }
