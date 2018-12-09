@@ -46,10 +46,6 @@ public enum UserCommand {
 
   public abstract String execute(Game game);
 
-  public static boolean isUserInputCommand(String text) {
-    return text.length() > 0 && text.charAt(0) == '/';
-  }
-
   public static boolean isValidUserCommand(String text){
     for (UserCommand command : UserCommand.values()) {
       if (command.name().equals(text)) {
