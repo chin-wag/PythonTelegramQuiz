@@ -1,27 +1,27 @@
 package main.java;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class GameManager {
-  static List<Long> adminsIds = Arrays.asList((long)185902976, (long)219230796, (long)-1);
-  private DatabaseManager databaseManager;
+  private UserInputHandler userInputHandler = new UserInputHandler();
+  private GameDatabaseManager databaseManager;
+  private QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager;
 
-  public GameManager(DatabaseManager databaseManager) {
+  public GameManager(GameDatabaseManager databaseManager) {
     this.databaseManager = databaseManager;
+    this.questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(databaseManager);
   }
 
   GameManager() {
-    databaseManager = new QuizDatabaseManager();
+    databaseManager = new GameDatabaseManager();
+    this.questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(databaseManager);
   }
 
-  private void addNewUser(long id) throws DataHandlingException {
-    var game = new Game(id, databaseManager);
-    databaseManager.saveGame(game);
+  private void addNewUser(long id) {
+    var game = new Game(id, questionAnswerPairDatabaseManager);
+    databaseManager.save(game);
   }
 
   private void removeUser(long id) throws DataHandlingException {
-      databaseManager.removeGame(id);
+      databaseManager.remove(id);
   }
 
   private boolean isNewUser(long id) {
@@ -29,7 +29,7 @@ public class GameManager {
   }
 
   String getQuestion(long id) throws DataHandlingException {
-    return databaseManager.getExistentGame(id).getCurrentQuestion();
+    return databaseManager.getExistent(id).getCurrentQuestion();
   }
 
   private String salute() {
@@ -39,29 +39,20 @@ public class GameManager {
 
   public String handleUserRequest(long id, String userMessage) {
     if (isNewUser(id)) {
-      try {
         addNewUser(id);
-        return salute() + "\n" + UserCommand.HELP.execute(databaseManager.getGame(id).get());
-      } catch (DataHandlingException e) {
-        System.out.println(e.toString());
-        return Answers.ERROR.getMessage();
-      }
+        return salute() + "\n" + UserCommand.HELP.execute(databaseManager.get(id).get());
     }
 
-    var currentGame = databaseManager.getGame(id).get();
+    var currentGame = databaseManager.get(id).get();
     var answer  = "";
 
-    if (EditModeCommand.isUserInputStartingEditMode(userMessage, currentGame) || currentGame.isEditMode) {
-      return handleEditModeCommand(currentGame, userMessage);
-    }
-
     if (currentGame.isGameContinued()) {
-      if (UserCommand.isUserInputCommand(userMessage)) {
-        answer = handleUserCommand(currentGame, userMessage);
+      if (userInputHandler.isUserInputCommand(userMessage, currentGame)) {
+        answer = userInputHandler.handle(currentGame, userMessage);
       } else {
         var isAnswerCorrect = currentGame.checkAnswer(userMessage);
         if (isAnswerCorrect) {
-          databaseManager.updateGame(currentGame);
+          databaseManager.update(currentGame);
         }
         answer = isAnswerCorrect ? Answers.CORRECT.getMessage() : Answers.INCORRECT.getMessage();
       }
@@ -80,30 +71,9 @@ public class GameManager {
     return answer;
   }
 
-  private String handleUserCommand(Game game, String userInput) {
-    var userCommand = userInput.substring(1).toUpperCase();
-    if (UserCommand.isValidUserCommand(userCommand)) {
-      var command = UserCommand.valueOf(userCommand);
-      return command.execute(game);
-    } else {
-      return String.format("Команды %s не существует", userCommand);
-    }
-  }
-
-  private String handleEditModeCommand(Game game, String userInput) {
-    var arguments = userInput.split(" ");
-    var editModeCommand = arguments[0].substring(1).toUpperCase();
-    if (EditModeCommand.isValidEditModeCommand(editModeCommand, game)) {
-      var command = EditModeCommand.valueOf(editModeCommand);
-      return command.execute(game, String.join(" ", Arrays.copyOfRange(arguments, 1, arguments.length)));
-    } else {
-      return String.format("Команды %s не существует", arguments[0]);
-    }
-  }
-
   boolean isGameContinued(long id) {
     try {
-      return databaseManager.getExistentGame(id).isGameContinued();
+      return databaseManager.getExistent(id).isGameContinued();
     } catch (DataHandlingException e) {
       System.out.println(e.toString());
     }
@@ -117,7 +87,7 @@ public class GameManager {
 
   boolean isGameEditMode(long id) {
     try {
-      return databaseManager.getExistentGame(id).isEditMode;
+      return databaseManager.getExistent(id).isEditMode;
     } catch (DataHandlingException e) {
       return false;
     }
