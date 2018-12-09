@@ -2,13 +2,13 @@ package main.java;
 
 import java.util.ArrayList;
 
-enum EditModeCommand {
+public enum EditModeCommand {
   EDIT {
     String getDescription() {
       return "включить режим редактирования";
     }
 
-    String execute(Game game, String query) {
+    public String execute(Game game, String query) {
       game.isEditMode = true;
       return "Режим редактирования начат\n" + HELP.execute(game, query);
     }
@@ -18,7 +18,7 @@ enum EditModeCommand {
       return "выйти из режима редактирования";
     }
 
-    String execute(Game game, String query) {
+    public String execute(Game game, String query) {
       game.isEditMode = false;
       return "Режим редактирования закончен";
     }
@@ -28,7 +28,7 @@ enum EditModeCommand {
       return "получить спиок вопросов";
     }
 
-    String execute(Game game, String query) {
+    public String execute(Game game, String query) {
       try {
         var pairs = editModeDatabaseManager.getQuestionAnswerPairs();
         var answer = new StringBuilder();
@@ -46,7 +46,7 @@ enum EditModeCommand {
       return "добавить новый вопрос; аргументы - вопрос, ответ";
     }
 
-    String execute(Game game, String query) {
+    public String execute(Game game, String query) {
       var arguments = query.split(" ");
       if (arguments.length != 2) {
         return "Неправильное количество аргументов";
@@ -60,7 +60,7 @@ enum EditModeCommand {
       return "удалить существующий вопрос; аргументы - id";
     }
 
-    String execute(Game game, String query) {
+    public String execute(Game game, String query) {
       var arguments = query.split(" ");
       if (arguments.length != 1) {
         return "Неправильное количество аргументов";
@@ -80,7 +80,7 @@ enum EditModeCommand {
       return "изменить существующий вопрос; аргументы - id, вопрос, ответ";
     }
 
-    String execute(Game game, String query) {
+    public String execute(Game game, String query) {
       var arguments = query.split(" ");
       if (arguments.length != 3) {
         return "Неправильное количество аргументов";
@@ -100,7 +100,7 @@ enum EditModeCommand {
       return "справка";
     }
 
-    String execute(Game game, String query) {
+    public String execute(Game game, String query) {
       return "Команды: " + createCommandsDescription();
     }
 
@@ -122,7 +122,7 @@ enum EditModeCommand {
 
   abstract String getDescription();
 
-  abstract String execute(Game game, String query);
+  public abstract String execute(Game game, String query);
 
   static boolean isValidEditModeCommand(String text, Game game){
 //    if (!adminIdsDatabaseManager.isAdminId(game.getId())) {

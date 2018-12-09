@@ -1,7 +1,7 @@
 package main.java;
 
-class DataHandlingException extends Exception {
-  DataHandlingException(String errorMessage){
+public class DataHandlingException extends Exception {
+  public DataHandlingException(String errorMessage){
     super(errorMessage);
   }
 
