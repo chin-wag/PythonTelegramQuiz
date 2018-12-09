@@ -6,13 +6,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="admins_ids")
-public class AdminsId {
+public class AdminId {
   @Id
   private long adminId;
 
-  public AdminsId() {}
-
-  public AdminsId(long id) {
-    this.adminId = id;
-  }
+  public AdminId() {}
 }
