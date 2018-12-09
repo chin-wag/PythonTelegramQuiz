@@ -16,7 +16,7 @@ public class GameManager {
   }
 
   private void addNewUser(long id) throws DataHandlingException {
-    var game = new Game(new QuizQuestionManager(id, databaseManager), id);
+    var game = new Game(id, databaseManager);
     databaseManager.saveGame(game);
   }
 
