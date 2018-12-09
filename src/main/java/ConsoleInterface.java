@@ -11,12 +11,7 @@ public class ConsoleInterface {
   private static QuizDatabaseManager databaseManager = new QuizDatabaseManager();
 
   public static void main(String[] args) {
-    try {
-      game = new Game(new QuizQuestionManager(databaseManager),(long)-1);
-    } catch (DataHandlingException e){
-      System.out.println(e.getMessage());
-      return;
-    }
+    game = new Game((long)-1, databaseManager);
     salute();
     play();
 
