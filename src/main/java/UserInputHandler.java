@@ -16,4 +16,8 @@ public class UserInputHandler {
       return String.format("Команды %s не существует", arguments[0]);
     }
   }
+
+  public boolean isUserInputCommand(String input, Game game) {
+    return (input.length() > 0 && input.charAt(0) == '/') || game.isEditMode;
+  }
 }
