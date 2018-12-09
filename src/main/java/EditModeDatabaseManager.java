@@ -25,17 +25,22 @@ class EditModeDatabaseManager {
     tx.commit();
   }
 
-  public void updateQuestionAnswerPair(QuestionAnswerPair pair) {
+  public void updateQuestionAnswerPair(int id, String[] arguments) {
     var tx = em.getTransaction();
     tx.begin();
-    em.merge(pair);
+    try {
+      var currentPair = getExistentQuestionAnswerPair(id);
+      currentPair.setQuestion(arguments[1]);
+      currentPair.setAnswer(arguments[2]);
+//      em.merge(currentPair);
+    } catch (DataHandlingException e) {return;}
     tx.commit();
   }
 
   public void removeQuestionAnswerPair(int id) throws DataHandlingException {
-    var existentGame = getExistentQuestionAnswerPair(id);
     var tx = em.getTransaction();
     tx.begin();
+    var existentGame = getExistentQuestionAnswerPair(id);
 
     if (!em.contains(existentGame)) {
       existentGame = em.merge(existentGame);

@@ -88,10 +88,7 @@ enum EditModeCommand {
 
       try {
         var id = Integer.parseInt(arguments[0]);
-        var currentPair = editModeDatabaseManager.getExistentQuestionAnswerPair(id);
-        currentPair.setQuestion(arguments[1]);
-        currentPair.setAnswer(arguments[2]);
-        editModeDatabaseManager.updateQuestionAnswerPair(currentPair);
+        editModeDatabaseManager.updateQuestionAnswerPair(id, arguments);
         return "вопрос был изменен";
       } catch (Exception e) {
         return e.getMessage();
@@ -121,13 +118,17 @@ enum EditModeCommand {
   },;
 
   EditModeDatabaseManager editModeDatabaseManager = new EditModeDatabaseManager();
+  static AdminIdsDatabaseManager adminIdsDatabaseManager = new AdminIdsDatabaseManager();
 
   abstract String getDescription();
 
   abstract String execute(Game game, String query);
 
   static boolean isValidEditModeCommand(String text, Game game){
-    if (!GameManager.adminsIds.contains(game.getId())) {
+//    if (!adminIdsDatabaseManager.isAdminId(game.getId())) {
+//      return false;
+//    }
+    if (!isUserInputStartingEditMode(text, game) && !game.isEditMode) {
       return false;
     }
 
@@ -141,11 +142,9 @@ enum EditModeCommand {
   }
 
   static boolean isUserInputStartingEditMode(String text, Game game) {
-    if (!GameManager.adminsIds.contains(game.getId())) {
+    if (!adminIdsDatabaseManager.isAdminId(game.getId())) {
       return false;
     }
-    return text.toUpperCase()
-            .substring(1)
-            .startsWith(EDIT.name());
+    return text.startsWith(EDIT.name());
   }
 }
