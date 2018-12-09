@@ -89,6 +89,8 @@ enum EditModeCommand {
       try {
         var id = Integer.parseInt(arguments[0]);
         var currentPair = editModeDatabaseManager.getExistentQuestionAnswerPair(id);
+        currentPair.setQuestion(arguments[1]);
+        currentPair.setAnswer(arguments[2]);
         editModeDatabaseManager.updateQuestionAnswerPair(currentPair);
         return "вопрос был изменен";
       } catch (Exception e) {
