@@ -7,11 +7,12 @@ public class ConsoleInterface {
   private static Scanner in = new Scanner(System.in);
   private static PrintStream out = new PrintStream(System.out);
   private static Game game;
-  private static GameDatabaseManager gameDatabaseManager = new GameDatabaseManager();
+  private static GameDatabaseManager gameDatabaseManager = new GameDatabaseManager("QuizUnit");
   private static UserInputHandler userInputHandler = new UserInputHandler();
 
   public static void main(String[] args) {
-    game = new Game((long)-1, new QuestionAnswerPairDatabaseManager(gameDatabaseManager));
+    game = new Game((long)-1, new QuestionAnswerPairDatabaseManager("QuizUnit", gameDatabaseManager));
+//    gameDatabaseManager.save(game);
     salute();
     play();
 

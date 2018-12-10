@@ -30,7 +30,7 @@ public enum EditModeCommand {
 
     public String execute(Game game, String query) {
       try {
-        var pairs = editModeDatabaseManager.getQuestionAnswerPairs();
+        var pairs = questionAnswerPairDatabaseManager.getPairs(game.getId());
         var answer = new StringBuilder();
         for (QuestionAnswerPair currentPair: pairs) {
           answer.append(String.format("%s. %s ; %s\n", currentPair.getId(), currentPair.getQuestion(), currentPair.getAnswer()));
@@ -51,7 +51,7 @@ public enum EditModeCommand {
       if (arguments.length != 2) {
         return "Неправильное количество аргументов";
       }
-      editModeDatabaseManager.saveQuestionAnswerPair(new QuestionAnswerPair(arguments[0], arguments[1]));
+      questionAnswerPairDatabaseManager.save(new QuestionAnswerPair(arguments[0], arguments[1]));
       return "пара была добавлена";
     }
   },
@@ -68,7 +68,7 @@ public enum EditModeCommand {
 
       try {
         var id = Integer.parseInt(arguments[0]);
-        editModeDatabaseManager.removeQuestionAnswerPair(id);
+        questionAnswerPairDatabaseManager.remove(id);
         return "вопрос был удален";
       } catch (Exception e) {
         return e.getMessage();
@@ -88,7 +88,7 @@ public enum EditModeCommand {
 
       try {
         var id = Integer.parseInt(arguments[0]);
-        editModeDatabaseManager.updateQuestionAnswerPair(id, arguments);
+        questionAnswerPairDatabaseManager.update(id, arguments);
         return "вопрос был изменен";
       } catch (Exception e) {
         return e.getMessage();
@@ -117,18 +117,16 @@ public enum EditModeCommand {
     }
   },;
 
-  EditModeDatabaseManager editModeDatabaseManager = new EditModeDatabaseManager();
-  static AdminIdsDatabaseManager adminIdsDatabaseManager = new AdminIdsDatabaseManager();
+  GameDatabaseManager gameDatabaseManager = new GameDatabaseManager("QuizUnit");
+  QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager("QuizUnit", gameDatabaseManager);
+  static AdminIdsDatabaseManager adminIdsDatabaseManager = new AdminIdsDatabaseManager("QuizUnit");
 
   abstract String getDescription();
 
   public abstract String execute(Game game, String query);
 
-  static boolean isValidEditModeCommand(String text, Game game){
-//    if (!adminIdsDatabaseManager.isAdminId(game.getId())) {
-//      return false;
-//    }
-    if (!isUserInputStartingEditMode(text, game) && !game.isEditMode) {
+  public static boolean isValidEditModeCommand(String text, Game game){
+    if (!(isUserInputStartingEditMode(text, game) || game.isEditMode)) {
       return false;
     }
 
@@ -141,7 +139,7 @@ public enum EditModeCommand {
     return false;
   }
 
-  static boolean isUserInputStartingEditMode(String text, Game game) {
+  public static boolean isUserInputStartingEditMode(String text, Game game) {
     if (!adminIdsDatabaseManager.isAdminId(game.getId())) {
       return false;
     }

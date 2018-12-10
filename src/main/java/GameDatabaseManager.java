@@ -6,8 +6,13 @@ import javax.persistence.Persistence;
 import java.util.Optional;
 
 public class GameDatabaseManager {
-  private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("QuizUnit");
-  private EntityManager em = emf.createEntityManager();
+  private static EntityManagerFactory emf;
+  private EntityManager em;
+
+  public GameDatabaseManager(String unitName) {
+    emf = Persistence.createEntityManagerFactory(unitName);
+    em = emf.createEntityManager();
+  }
 
   public void save(Game game) {
     var tx = em.getTransaction();
@@ -42,13 +47,13 @@ public class GameDatabaseManager {
     return Optional.ofNullable(em.find(Game.class, id));
   }
 
-  public Game getExistent(long id) throws DataHandlingException
+  Game getExistent(long id) throws DataHandlingException
   {
     return get(id).orElseThrow(()->
             new DataHandlingException(String.format("Game with id %s is not in database", id)));
   }
 
-  boolean isGameExistent(long id)  {
+  public boolean isExistent(long id)  {
     return get(id).isPresent();
   }
 }

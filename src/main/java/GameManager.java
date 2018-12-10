@@ -1,35 +1,38 @@
 package main.java;
 
+import java.util.List;
+import java.util.Optional;
+
 public class GameManager {
   private UserInputHandler userInputHandler = new UserInputHandler();
-  private GameDatabaseManager databaseManager;
+  private GameDatabaseManager gameDatabaseManager;
   private QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager;
 
-  public GameManager(GameDatabaseManager databaseManager) {
-    this.databaseManager = databaseManager;
-    this.questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(databaseManager);
+  public GameManager(GameDatabaseManager gameDatabaseManager, QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager) {
+    this.gameDatabaseManager = gameDatabaseManager;
+    this.questionAnswerPairDatabaseManager = questionAnswerPairDatabaseManager;
   }
 
   GameManager() {
-    databaseManager = new GameDatabaseManager();
-    this.questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(databaseManager);
+    gameDatabaseManager = new GameDatabaseManager("QuizUnit");
+    this.questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager("QuizUnit", gameDatabaseManager);
   }
 
   private void addNewUser(long id) {
     var game = new Game(id, questionAnswerPairDatabaseManager);
-    databaseManager.save(game);
+    gameDatabaseManager.save(game);
   }
 
   private void removeUser(long id) throws DataHandlingException {
-      databaseManager.remove(id);
+      gameDatabaseManager.remove(id);
   }
 
   private boolean isNewUser(long id) {
-    return !databaseManager.isGameExistent(id);
+    return !gameDatabaseManager.isExistent(id);
   }
 
   String getQuestion(long id) throws DataHandlingException {
-    return databaseManager.getExistent(id).getCurrentQuestion();
+    return gameDatabaseManager.getExistent(id).getCurrentQuestion();
   }
 
   private String salute() {
@@ -37,22 +40,38 @@ public class GameManager {
             "За каждый правильный ответ получаете очки. Начинаем!";
   }
 
+  public interface InputHandler {
+    boolean canHandle(String userMessage);
+    String handle(Game game, String userMessage);
+
+    default Optional<String> tryHandle(Game game, String userMessage) {
+      return canHandle(userMessage) ? Optional.of(handle(game, userMessage)) : Optional.empty();
+    }
+  }
+
   public String handleUserRequest(long id, String userMessage) {
     if (isNewUser(id)) {
         addNewUser(id);
-        return salute() + "\n" + UserCommand.HELP.execute(databaseManager.get(id).get());
+        return salute() + "\n" + UserCommand.HELP.execute(gameDatabaseManager.get(id).get());
     }
 
-    var currentGame = databaseManager.get(id).get();
+    var currentGame = gameDatabaseManager.get(id).get();
     var answer  = "";
 
     if (currentGame.isGameContinued()) {
+//      List<InputHandler> handlers;
+//      for (var h : handlers) {
+//        if (h.canHandle(userMessage)) {
+//          answer = h.handle(currentGame, userMessage);
+//          break;
+//        }
+//      }
       if (userInputHandler.isUserInputCommand(userMessage, currentGame)) {
         answer = userInputHandler.handle(currentGame, userMessage);
       } else {
         var isAnswerCorrect = currentGame.checkAnswer(userMessage);
         if (isAnswerCorrect) {
-          databaseManager.update(currentGame);
+          gameDatabaseManager.update(currentGame);
         }
         answer = isAnswerCorrect ? Answers.CORRECT.getMessage() : Answers.INCORRECT.getMessage();
       }
@@ -73,7 +92,7 @@ public class GameManager {
 
   boolean isGameContinued(long id) {
     try {
-      return databaseManager.getExistent(id).isGameContinued();
+      return gameDatabaseManager.getExistent(id).isGameContinued();
     } catch (DataHandlingException e) {
       System.out.println(e.toString());
     }
@@ -82,12 +101,12 @@ public class GameManager {
   }
 
   boolean isGameExistent(long id) {
-    return databaseManager.isGameExistent(id);
+    return gameDatabaseManager.isExistent(id);
   }
 
   boolean isGameEditMode(long id) {
     try {
-      return databaseManager.getExistent(id).isEditMode;
+      return gameDatabaseManager.getExistent(id).isEditMode;
     } catch (DataHandlingException e) {
       return false;
     }

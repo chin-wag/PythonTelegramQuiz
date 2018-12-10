@@ -5,8 +5,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class AdminIdsDatabaseManager {
-  private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("QuizUnit");
-  private EntityManager em = emf.createEntityManager();
+  private static EntityManagerFactory emf;
+  private EntityManager em;
+
+  AdminIdsDatabaseManager(String unitName) {
+    emf = Persistence.createEntityManagerFactory(unitName);
+    em = emf.createEntityManager();
+  }
 
   public boolean isAdminId(long id) {
     try {
@@ -15,13 +20,4 @@ public class AdminIdsDatabaseManager {
       return false;
     }
   }
-
-
-  public void saveGame(AdminId adminId) {
-    var tx = em.getTransaction();
-    tx.begin();
-    em.persist(adminId);
-    tx.commit();
-  }
-
 }

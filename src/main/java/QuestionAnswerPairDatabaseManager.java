@@ -7,49 +7,62 @@ import java.util.List;
 import java.util.Optional;
 
 public class QuestionAnswerPairDatabaseManager {
-  private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("QuizUnit");
-  private EntityManager em = emf.createEntityManager();
+  private static EntityManagerFactory emf;
+  private EntityManager em;
   private GameDatabaseManager gameDatabaseManager;
+//
+//  QuestionAnswerPairDatabaseManager(GameDatabaseManager gameDatabaseManager) {
+//    this.gameDatabaseManager = gameDatabaseManager;
+//  }
 
-  QuestionAnswerPairDatabaseManager(GameDatabaseManager gameDatabaseManager) {
+  public QuestionAnswerPairDatabaseManager(String unitName, GameDatabaseManager gameDatabaseManager) {
+    emf = Persistence.createEntityManagerFactory(unitName);
+    em = emf.createEntityManager();
     this.gameDatabaseManager = gameDatabaseManager;
   }
 
-  public void save(QuestionAnswerPair pair)
-  {
+  public void save(QuestionAnswerPair pair) {
     var tx = em.getTransaction();
     tx.begin();
     em.persist(pair);
     tx.commit();
   }
 
-  public void update(QuestionAnswerPair pair)
-  {
+//  public void update(QuestionAnswerPair pair) {
+//    var tx = em.getTransaction();
+//    tx.begin();
+//    em.merge(pair);
+//    tx.commit();
+//  }
+
+  public void update(int id, String[] arguments) {
     var tx = em.getTransaction();
     tx.begin();
-    em.merge(pair);
+    try {
+      var currentPair = getExistent(id);
+      currentPair.setQuestion(arguments[1]);
+      currentPair.setAnswer(arguments[2]);
+    } catch (DataHandlingException e) {return;}
     tx.commit();
   }
 
   public void remove(int id) throws DataHandlingException {
-    var existentGame = gameDatabaseManager.getExistent(id);
+    var existent = getExistent(id);
     var tx = em.getTransaction();
     tx.begin();
 
-    if (!em.contains(existentGame)) {
-      existentGame = em.merge(existentGame);
+    if (!em.contains(existent)) {
+      existent = em.merge(existent);
     }
-    em.remove(existentGame);
+    em.remove(existent);
     tx.commit();
   }
 
-  public Optional<QuestionAnswerPair> get(long id) throws DataHandlingException
-  {
+  public Optional<QuestionAnswerPair> get(int id) {
     return Optional.ofNullable(em.find(QuestionAnswerPair.class, id));
   }
 
-  public List<QuestionAnswerPair> getPairs(long id) throws DataHandlingException
-  {
+  public List<QuestionAnswerPair> getPairs(long id) throws DataHandlingException {
     try {
       var startIndex = gameDatabaseManager.get(id)
               .map(Game::getCurrentPairId)
@@ -62,8 +75,7 @@ public class QuestionAnswerPairDatabaseManager {
     }
   }
 
-  public QuestionAnswerPair getExistent(long id) throws DataHandlingException
-  {
+  public QuestionAnswerPair getExistent(int id) throws DataHandlingException {
     return get(id).orElseThrow(()->
             new DataHandlingException(String.format("Pair with id %s is not in database", id)));
   }

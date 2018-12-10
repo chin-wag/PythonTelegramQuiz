@@ -16,11 +16,11 @@ public class Game {
   private int currentPairIndex;
   @Transient
   private boolean isGameContinued = true;
-  boolean isEditMode = false;
+  public boolean isEditMode = false;
 
   public Game() {}
 
-  Game(long id, QuestionAnswerPairDatabaseManager databaseManager) {
+  public Game(long id, QuestionAnswerPairDatabaseManager databaseManager) {
     this(databaseManager);
     this.id = id;
   }
