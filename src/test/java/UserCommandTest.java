@@ -14,11 +14,12 @@ class UserCommandTest {
     assertFalse(UserCommand.isValidUserCommand("BLABLABLA"));
   }
 
-//  @Test
-//  void testHelp() {
-//      assertEquals(
-//              "Команды: /score - узнать количество очков, /help - справка, /stop - остановить " +
-//              "викторину",
-//              UserCommand.HELP.execute(new Game(new DatabaseManagerMock())));
-//  }
+  @Test
+  void testHelp() {
+      assertEquals(
+              "Команды: /score - узнать количество очков, /help - справка, /stop - остановить " +
+              "викторину",
+              UserCommand.HELP.execute(new Game(new QuestionAnswerPairDatabaseManager(
+                      "TestQuizUnit", new GameDatabaseManager("TestQuizUnit")))));
+  }
 }

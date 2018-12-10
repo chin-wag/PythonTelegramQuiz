@@ -6,80 +6,97 @@ import static org.junit.jupiter.api.Assertions.*;
 import main.java.*;
 
 class GameManagerTest {
-//  private static long id = 0;
-//
-//  @Test
-//  void testAddNewGame() {
-//    var dataBaseMock = new DatabaseManagerMock();
-//    var gameManager = new GameManager(dataBaseMock);
-//    gameManager.handleUserRequest(id, " ");
-//    var game = dataBaseMock.getGame(id);
-//    assertTrue(game.isPresent());
-//  }
-//
-//  @Test
-//  void testGetCurrentQuestion() {
-//    var dataBaseMock = new DatabaseManagerMock();
-//    var gameManager = new GameManager(dataBaseMock);
-//    gameManager.handleUserRequest(id, " ");
-//    var game = dataBaseMock.getGame(id);
-//    assertEquals("2+2", game.get().getCurrentQuestion());
-//  }
-//
-//  @Test
-//  void testScoreIncrement() {
-//    var dataBaseMock = new DatabaseManagerMock();
-//    var gameManager = new GameManager(dataBaseMock);
-//    gameManager.handleUserRequest(id, " ");
-//    var game = dataBaseMock.getGame(id);
-//    assertEquals(0, game.get().getScore());
-//
-//    gameManager.handleUserRequest(id, "4");
-//    game = dataBaseMock.getGame(id);
-//    assertEquals(1, game.get().getScore());
-//  }
-//
-//  @Test
-//  void testWrongAnswer() {
-//    var dataBaseMock = new DatabaseManagerMock();
-//    var gameManager = new GameManager(dataBaseMock);
-//    gameManager.handleUserRequest(id, " ");
-//
-//    var expectedScore = dataBaseMock.getGame(id).get().getScore();
-//    var expectedPairId = dataBaseMock.getGame(id).get().getCurrentPairId();
-//
-//    gameManager.handleUserRequest(id, "0");
-//    var game = dataBaseMock.getGame(id);
-//    assertEquals(expectedScore, game.get().getScore());
-//    assertEquals(expectedPairId, game.get().getCurrentPairId());
-//  }
-//
-//  @Test
-//  void testNoScoreIncrementIfWrongAnswer() {
-//    var dataBaseMock = new DatabaseManagerMock();
-//    var gameManager = new GameManager(dataBaseMock);
-//    gameManager.handleUserRequest(id, " ");
-//    gameManager.handleUserRequest(id, "3");
-//    var game = dataBaseMock.getGame(id);
-//    assertEquals(0, game.get().getScore());
-//  }
-//
-//  @Test
-//  void testStopCommand() {
-//    var dataBaseMock = new DatabaseManagerMock();
-//    var gameManager = new GameManager(dataBaseMock);
-//    gameManager.handleUserRequest(id, " ");
-//    gameManager.handleUserRequest(id, "/stop");
-//    assertFalse(dataBaseMock.isGameExistent(id));
-//  }
-//
-//  @Test
-//  void testRemoveAfterEndOfQuestions() {
-//    var dataBaseMock = new DatabaseManagerMock();
-//    var gameManager = new GameManager(dataBaseMock);
-//    gameManager.handleUserRequest(id, " ");
-//    gameManager.handleUserRequest(id, "4");
-//    gameManager.handleUserRequest(id, "5");
-//    assertFalse(dataBaseMock.isGameExistent(id));
-//  }
+  private static String unitName = "TestQuizUnit";
+  private static GameDatabaseManager gameDatabaseManager = new GameDatabaseManager(unitName);
+  private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager =
+          new QuestionAnswerPairDatabaseManager(unitName, gameDatabaseManager);
+
+  @Test
+  void testAddNewGame() {
+    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+    gameManager.handleUserRequest((long)-2, " ");
+    var game = gameDatabaseManager.get((long)-2);
+    assertTrue(game.isPresent());
+    try {
+      gameDatabaseManager.remove((long)-2);
+    } catch (DataHandlingException e) {/*can't do anything*/ }
+  }
+
+  @Test
+  void testGetCurrentQuestion() {
+    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+    gameManager.handleUserRequest((long)-2, " ");
+    var game = gameDatabaseManager.get((long)-2);
+    assertEquals("2+2", game.get().getCurrentQuestion());
+    try {
+      gameDatabaseManager.remove((long)-2);
+    } catch (DataHandlingException e) {/*can't do anything*/ }
+  }
+
+  @Test
+  void testScoreIncrement() {
+    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+    gameManager.handleUserRequest((long)-2, " ");
+    var game = gameDatabaseManager.get((long)-2);
+    assertEquals(0, game.get().getScore());
+
+    gameManager.handleUserRequest((long)-2, "4");
+    game = gameDatabaseManager.get((long)-2);
+    assertEquals(1, game.get().getScore());
+    try {
+      gameDatabaseManager.remove((long)-2);
+    } catch (DataHandlingException e) {/*can't do anything*/ }
+  }
+
+  @Test
+  void testWrongAnswer() {
+    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+    gameManager.handleUserRequest((long)-2, " ");
+
+    var expectedScore = gameDatabaseManager.get((long)-2).get().getScore();
+    var expectedPairId = gameDatabaseManager.get((long)-2).get().getCurrentPairId();
+
+    gameManager.handleUserRequest((long)-2, "0");
+    var game = gameDatabaseManager.get((long)-2);
+    assertEquals(expectedScore, game.get().getScore());
+    assertEquals(expectedPairId, game.get().getCurrentPairId());
+    try {
+      gameDatabaseManager.remove((long)-2);
+    } catch (DataHandlingException e) {/*can't do anything*/ }
+  }
+
+  @Test
+  void testNoScoreIncrementIfWrongAnswer() {
+    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+    gameManager.handleUserRequest((long)-2, " ");
+    gameManager.handleUserRequest((long)-2, "3");
+    var game = gameDatabaseManager.get((long)-2);
+    assertEquals(0, game.get().getScore());
+    try {
+      gameDatabaseManager.remove((long)-2);
+    } catch (DataHandlingException e) {/*can't do anything*/ }
+  }
+
+  @Test
+  void testStopCommand() {
+    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+    gameManager.handleUserRequest((long)-2, " ");
+    gameManager.handleUserRequest((long)-2, "/stop");
+    assertFalse(gameDatabaseManager.isExistent((long)-2));
+    try {
+      gameDatabaseManager.remove((long)-2);
+    } catch (DataHandlingException e) {/*can't do anything*/ }
+  }
+
+  @Test
+  void testRemoveAfterEndOfQuestions() {
+    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+    gameManager.handleUserRequest((long)-2, " ");
+    gameManager.handleUserRequest((long)-2, "4");
+    gameManager.handleUserRequest((long)-2, "6");
+    assertFalse(gameDatabaseManager.isExistent((long)-2));
+    try {
+      gameDatabaseManager.remove((long)-2);
+    } catch (DataHandlingException e) {/*can't do anything*/ }
+  }
 }
