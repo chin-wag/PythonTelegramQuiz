@@ -1,15 +1,23 @@
 package test.java;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import main.java.*;
 
 class GameManagerTest {
   private static String unitName = "TestQuizUnit";
-  private static GameDatabaseManager gameDatabaseManager = new GameDatabaseManager(unitName);
-  private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager =
-          new QuestionAnswerPairDatabaseManager(unitName, gameDatabaseManager);
-  private static GameManager gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+  private static GameDatabaseManager gameDatabaseManager;
+  private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager;
+  private static GameManager gameManager;
+
+  @BeforeEach
+  void initialize()
+  {
+    gameDatabaseManager = new GameDatabaseManager(unitName);
+    questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(unitName, gameDatabaseManager);
+    gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+  }
 
   @Test
   void testAddNewGame() throws DataHandlingException {

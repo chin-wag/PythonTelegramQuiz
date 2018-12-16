@@ -1,15 +1,22 @@
 package test.java;
 
 import main.java.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AdminCommandTest {
   private static String unitName = "TestQuizUnit";
-  private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager =
-          new QuestionAnswerPairDatabaseManager(unitName, new GameDatabaseManager(unitName));
-  private static Game game = new Game((long)-1, questionAnswerPairDatabaseManager);
+  private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager;
+  private static Game game;
+
+  @BeforeEach
+  void initialize()
+  {
+    questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(unitName, new GameDatabaseManager(unitName));
+    game = new Game(-1L, questionAnswerPairDatabaseManager);
+  }
 
   @Test
   void testIsUserInputStartAdminMode() {

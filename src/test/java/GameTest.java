@@ -1,5 +1,6 @@
 package test.java;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,8 +9,13 @@ import main.java.*;
 
 class GameTest {
   private static String unitName = "TestQuizUnit";
-  private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager =
-          new QuestionAnswerPairDatabaseManager(unitName, new GameDatabaseManager(unitName));
+  private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager;
+
+  @BeforeEach
+  void initialize()
+  {
+    questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(unitName, new GameDatabaseManager(unitName));
+  }
 
   @Test
   void testGetScore() {

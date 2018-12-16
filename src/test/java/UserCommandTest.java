@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import main.java.*;
 
 class UserCommandTest {
-
   @Test
   void testIsUserInputValidCommand() {
     assertTrue(UserCommand.isValidUserCommand("SCORE"));
