@@ -1,24 +1,11 @@
 package main.java;
 
-import javax.persistence.EntityManager;
 import java.util.Optional;
 
-public class GameDatabaseManager extends DatabaseManager<Game, Long> {
-  private EntityManager em;
-
+public class GameDatabaseManager extends GameAndPairDatabaseManager<Game, Long> {
   public GameDatabaseManager(String unitName) {
     super(unitName);
-    em = emf.createEntityManager();
   }
-
-
-//  public void update(Game game)
-//  {
-//    var tx = em.getTransaction();
-//    tx.begin();
-//    em.merge(game);
-//    tx.commit();
-//  }
 
   public Optional<Game> get(Long id)
   {
