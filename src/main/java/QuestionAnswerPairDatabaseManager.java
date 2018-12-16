@@ -6,8 +6,8 @@ import javax.persistence.Persistence;
 import java.util.List;
 import java.util.Optional;
 
-public class QuestionAnswerPairDatabaseManager {
-  private static EntityManagerFactory emf;
+public class QuestionAnswerPairDatabaseManager extends DatabaseManager<QuestionAnswerPair, Integer> {
+//  private static EntityManagerFactory emf;
   private EntityManager em;
   private GameDatabaseManager gameDatabaseManager;
 //
@@ -16,24 +16,12 @@ public class QuestionAnswerPairDatabaseManager {
 //  }
 
   public QuestionAnswerPairDatabaseManager(String unitName, GameDatabaseManager gameDatabaseManager) {
-    emf = Persistence.createEntityManagerFactory(unitName);
+//    emf = Persistence.createEntityManagerFactory(unitName);
+    super(unitName);
     em = emf.createEntityManager();
     this.gameDatabaseManager = gameDatabaseManager;
   }
 
-  public void save(QuestionAnswerPair pair) {
-    var tx = em.getTransaction();
-    tx.begin();
-    em.persist(pair);
-    tx.commit();
-  }
-
-//  public void update(QuestionAnswerPair pair) {
-//    var tx = em.getTransaction();
-//    tx.begin();
-//    em.merge(pair);
-//    tx.commit();
-//  }
 
   public void update(int id, String[] arguments) {
     var tx = em.getTransaction();
@@ -46,19 +34,7 @@ public class QuestionAnswerPairDatabaseManager {
     tx.commit();
   }
 
-  public void remove(int id) throws DataHandlingException {
-    var existent = getExistent(id);
-    var tx = em.getTransaction();
-    tx.begin();
-
-    if (!em.contains(existent)) {
-      existent = em.merge(existent);
-    }
-    em.remove(existent);
-    tx.commit();
-  }
-
-  public Optional<QuestionAnswerPair> get(int id) {
+  public Optional<QuestionAnswerPair> get(Integer id) {
     return Optional.ofNullable(em.find(QuestionAnswerPair.class, id));
   }
 
@@ -73,10 +49,5 @@ public class QuestionAnswerPairDatabaseManager {
     } catch (Exception e) {
       throw new DataHandlingException(e);
     }
-  }
-
-  public QuestionAnswerPair getExistent(int id) throws DataHandlingException {
-    return get(id).orElseThrow(()->
-            new DataHandlingException(String.format("Pair with id %s is not in database", id)));
   }
 }

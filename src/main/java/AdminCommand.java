@@ -2,7 +2,7 @@ package main.java;
 
 import java.util.ArrayList;
 
-public enum EditModeCommand {
+public enum AdminCommand {
   EDIT {
     String getDescription() {
       return "включить режим редактирования";
@@ -106,7 +106,7 @@ public enum EditModeCommand {
 
     private String createCommandsDescription() {
       var result = new ArrayList<String>();
-      for (var editModeCommand : EditModeCommand.values()) {
+      for (var editModeCommand : AdminCommand.values()) {
         var command = editModeCommand.name().toLowerCase();
         var description = editModeCommand.getDescription();
 
@@ -130,7 +130,7 @@ public enum EditModeCommand {
       return false;
     }
 
-    for (EditModeCommand command : EditModeCommand.values()) {
+    for (AdminCommand command : AdminCommand.values()) {
       if (command.name().equals(text)) {
         return true;
       }
