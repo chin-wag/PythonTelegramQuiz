@@ -12,14 +12,12 @@ public class QuestionAnswerPairDatabaseManager extends GameAndPairDatabaseManage
     this.gameDatabaseManager = gameDatabaseManager;
   }
 
-  void update(int id, String[] arguments) {
+  void update(int id, String[] arguments) throws DataHandlingException {
     var tx = em.getTransaction();
     tx.begin();
-    try {
-      var currentPair = getExistent(id);
-      currentPair.setQuestion(arguments[1]);
-      currentPair.setAnswer(arguments[2]);
-    } catch (DataHandlingException e) {return;}
+    var currentPair = getExistent(id);
+    currentPair.setQuestion(arguments[1]);
+    currentPair.setAnswer(arguments[2]);
     tx.commit();
   }
 
