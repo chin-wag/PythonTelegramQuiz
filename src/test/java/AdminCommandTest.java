@@ -9,27 +9,27 @@ public class AdminCommandTest {
   private static String unitName = "TestQuizUnit";
   private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager =
           new QuestionAnswerPairDatabaseManager(unitName, new GameDatabaseManager(unitName));
+  private static Game game = new Game((long)-1, questionAnswerPairDatabaseManager);
 
   @Test
   void testIsUserInputStartAdminMode() {
-    assertTrue(EditModeCommand.isUserInputStartingEditMode("EDIT", new Game((long)-1, questionAnswerPairDatabaseManager)));
+    assertTrue(AdminCommand.isUserInputStartingEditMode("EDIT", game));
   }
 
   @Test
   void testIsUserInputValidAdminCommand() {
-    var game = new Game((long)-1, questionAnswerPairDatabaseManager);
-    assertTrue(EditModeCommand.isValidEditModeCommand("EDIT", game));
+    assertTrue(AdminCommand.isValidEditModeCommand("EDIT", game));
     game.isEditMode = true;
-    assertTrue(EditModeCommand.isValidEditModeCommand("GET", game));
-    assertTrue(EditModeCommand.isValidEditModeCommand("ADD", game));
-    assertTrue(EditModeCommand.isValidEditModeCommand("DELETE", game));
-    assertTrue(EditModeCommand.isValidEditModeCommand("MODIFY", game));
-    assertTrue(EditModeCommand.isValidEditModeCommand("HELP", game));
-    assertFalse(EditModeCommand.isValidEditModeCommand("STOP", game));
-    assertFalse(EditModeCommand.isValidEditModeCommand("ABRACADABRA", game));
-    assertTrue(EditModeCommand.isValidEditModeCommand("EXIT", game));
+    assertTrue(AdminCommand.isValidEditModeCommand("GET", game));
+    assertTrue(AdminCommand.isValidEditModeCommand("ADD", game));
+    assertTrue(AdminCommand.isValidEditModeCommand("DELETE", game));
+    assertTrue(AdminCommand.isValidEditModeCommand("MODIFY", game));
+    assertTrue(AdminCommand.isValidEditModeCommand("HELP", game));
+    assertFalse(AdminCommand.isValidEditModeCommand("STOP", game));
+    assertFalse(AdminCommand.isValidEditModeCommand("ABRACADABRA", game));
+    assertTrue(AdminCommand.isValidEditModeCommand("EXIT", game));
     game.isEditMode = false;
-    assertFalse(EditModeCommand.isValidEditModeCommand("ADD", game));
+    assertFalse(AdminCommand.isValidEditModeCommand("ADD", game));
   }
 
   @Test
@@ -41,6 +41,6 @@ public class AdminCommandTest {
                     "вопрос, ответ, /delete - удалить существующий вопрос; " +
                     "аргументы - id, /modify - изменить существующий вопрос; " +
                     "аргументы - id, вопрос, ответ, /help - справка",
-            EditModeCommand.HELP.execute(new Game(questionAnswerPairDatabaseManager), "/help"));
+            AdminCommand.HELP.execute(game, "/help"));
   }
 }

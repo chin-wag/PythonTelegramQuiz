@@ -1,7 +1,6 @@
 package test.java;
 
 import org.junit.jupiter.api.Test;
-import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import main.java.*;
 
@@ -10,32 +9,26 @@ class GameManagerTest {
   private static GameDatabaseManager gameDatabaseManager = new GameDatabaseManager(unitName);
   private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager =
           new QuestionAnswerPairDatabaseManager(unitName, gameDatabaseManager);
+  private static GameManager gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
 
   @Test
-  void testAddNewGame() {
-    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+  void testAddNewGame() throws DataHandlingException {
     gameManager.handleUserRequest((long)-2, " ");
     var game = gameDatabaseManager.get((long)-2);
     assertTrue(game.isPresent());
-    try {
-      gameDatabaseManager.remove((long)-2);
-    } catch (DataHandlingException e) {/*can't do anything*/ }
+    gameDatabaseManager.remove((long)-2);
   }
 
   @Test
-  void testGetCurrentQuestion() {
-    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+  void testGetCurrentQuestion() throws DataHandlingException {
     gameManager.handleUserRequest((long)-2, " ");
     var game = gameDatabaseManager.get((long)-2);
     assertEquals("2+2", game.get().getCurrentQuestion());
-    try {
-      gameDatabaseManager.remove((long)-2);
-    } catch (DataHandlingException e) {/*can't do anything*/ }
+    gameDatabaseManager.remove((long)-2);
   }
 
   @Test
-  void testScoreIncrement() {
-    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+  void testScoreIncrement() throws DataHandlingException {
     gameManager.handleUserRequest((long)-2, " ");
     var game = gameDatabaseManager.get((long)-2);
     assertEquals(0, game.get().getScore());
@@ -43,14 +36,11 @@ class GameManagerTest {
     gameManager.handleUserRequest((long)-2, "4");
     game = gameDatabaseManager.get((long)-2);
     assertEquals(1, game.get().getScore());
-    try {
-      gameDatabaseManager.remove((long)-2);
-    } catch (DataHandlingException e) {/*can't do anything*/ }
+    gameDatabaseManager.remove((long)-2);
   }
 
   @Test
-  void testWrongAnswer() {
-    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+  void testWrongAnswer() throws DataHandlingException {
     gameManager.handleUserRequest((long)-2, " ");
 
     var expectedScore = gameDatabaseManager.get((long)-2).get().getScore();
@@ -60,43 +50,36 @@ class GameManagerTest {
     var game = gameDatabaseManager.get((long)-2);
     assertEquals(expectedScore, game.get().getScore());
     assertEquals(expectedPairId, game.get().getCurrentPairId());
-    try {
-      gameDatabaseManager.remove((long)-2);
-    } catch (DataHandlingException e) {/*can't do anything*/ }
+    gameDatabaseManager.remove((long)-2);
   }
 
   @Test
-  void testNoScoreIncrementIfWrongAnswer() {
-    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+  void testNoScoreIncrementIfWrongAnswer() throws DataHandlingException {
     gameManager.handleUserRequest((long)-2, " ");
     gameManager.handleUserRequest((long)-2, "3");
     var game = gameDatabaseManager.get((long)-2);
     assertEquals(0, game.get().getScore());
-    try {
-      gameDatabaseManager.remove((long)-2);
-    } catch (DataHandlingException e) {/*can't do anything*/ }
+    gameDatabaseManager.remove((long)-2);
   }
 
   @Test
-  void testStopCommand() {
-    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+  void testStopCommand() throws DataHandlingException {
     gameManager.handleUserRequest((long)-2, " ");
     gameManager.handleUserRequest((long)-2, "/stop");
     assertFalse(gameDatabaseManager.isExistent((long)-2));
-    try {
+    if (gameDatabaseManager.isExistent((long)-2)) {
       gameDatabaseManager.remove((long)-2);
-    } catch (DataHandlingException e) {/*can't do anything*/ }
+    }
   }
 
   @Test
-  void testRemoveAfterEndOfQuestions() {
-    var gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
+  void testRemoveAfterEndOfQuestions() throws DataHandlingException {
     gameManager.handleUserRequest((long)-2, " ");
     gameManager.handleUserRequest((long)-2, "4");
     gameManager.handleUserRequest((long)-2, "6");
     assertFalse(gameDatabaseManager.isExistent((long)-2));
-    try {
+    if (gameDatabaseManager.isExistent((long)-2)) {
       gameDatabaseManager.remove((long)-2);
-    } catch (DataHandlingException e) {/*can't do anything*/ }
+    }
   }
 }
