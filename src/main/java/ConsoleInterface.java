@@ -1,6 +1,8 @@
 package main.java;
 
 import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleInterface {
@@ -8,11 +10,13 @@ public class ConsoleInterface {
   private static PrintStream out = new PrintStream(System.out);
   private static Game game;
   private static GameDatabaseManager gameDatabaseManager = new GameDatabaseManager("QuizUnit");
-  private static UserInputHandler userInputHandler = new UserInputHandler();
+  private static List<InputHandler> inputHandlers = Arrays.asList(
+          new AdminInputHandler(),
+          new UserInputHandler(),
+          new AnswerInputHandler());
 
   public static void main(String[] args) {
     game = new Game((long)-1, new QuestionAnswerPairDatabaseManager("QuizUnit", gameDatabaseManager));
-//    gameDatabaseManager.save(game);
     salute();
     play();
 
@@ -43,16 +47,16 @@ public class ConsoleInterface {
       out.print("Ваш ответ: ");
     }
     var currentInput = in.nextLine();
-
-    if (userInputHandler.isUserInputCommand(currentInput, game)) {
-      out.println(userInputHandler.handle(game, currentInput));
-    } else {
-      var isAnswerCorrect = game.checkAnswer(currentInput);
-      if (isAnswerCorrect) {
-        gameDatabaseManager.update(game);
+    if (game.isGameContinued()) {
+      handled: {
+        for (var h : inputHandlers) {
+          if (h.canHandle(game, currentInput)) {
+            out.println(h.handle(game, currentInput));
+            break handled;
+          }
+        }
+        out.println(String.format("Команды %s не существует", currentInput));
       }
-      out.println(isAnswerCorrect ? Answers.CORRECT.getMessage() : Answers.INCORRECT.getMessage());
-      out.println();
     }
   }
 
