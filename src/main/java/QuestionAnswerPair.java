@@ -1,5 +1,7 @@
 package main.java;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -35,4 +37,6 @@ public class QuestionAnswerPair implements Serializable {
   void setAnswer(String answer) { this.answer = answer; }
 
   int getId() { return id; }
+
+  void setId(int id) { this.id = id; }
 }
