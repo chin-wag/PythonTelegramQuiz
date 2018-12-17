@@ -15,10 +15,11 @@ class UserCommandTest {
 
   @Test
   void testHelp() {
+    var gameDatabaseManager = new GameDatabaseManager("TestQuizUnit");
       assertEquals(
               "Команды: /score - узнать количество очков, /help - справка, /stop - остановить " +
               "викторину",
               UserCommand.HELP.execute(new Game(new QuestionAnswerPairDatabaseManager(
-                      "TestQuizUnit", new GameDatabaseManager("TestQuizUnit")))));
+                      "TestQuizUnit"), gameDatabaseManager)));
   }
 }

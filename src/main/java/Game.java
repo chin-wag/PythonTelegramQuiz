@@ -20,14 +20,17 @@ public class Game {
 
   public Game() {}
 
-  public Game(long id, QuestionAnswerPairDatabaseManager databaseManager) {
-    this(databaseManager);
+  public Game(long id, QuestionAnswerPairDatabaseManager databaseManager, GameDatabaseManager gameDatabaseManager) {
+    this(databaseManager, gameDatabaseManager);
     this.id = id;
   }
 
-  public Game(QuestionAnswerPairDatabaseManager databaseManager) {
+  public Game(QuestionAnswerPairDatabaseManager databaseManager, GameDatabaseManager gameDatabaseManager) {
     try {
-      pairs = databaseManager.getPairs(id);
+      var startIndex = gameDatabaseManager.get(id)
+        .map(Game::getCurrentPairId)
+        .orElse(1);
+      pairs = databaseManager.getPairs(startIndex);
       currentPairIndex = 0;
     } catch (DataHandlingException e) {
       pairs = new ArrayList<>();

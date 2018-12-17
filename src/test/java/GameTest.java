@@ -10,28 +10,29 @@ import main.java.*;
 class GameTest {
   private static String unitName = "TestQuizUnit";
   private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager;
+  private static GameDatabaseManager gameDatabaseManager;
 
   @BeforeEach
-  void initialize()
-  {
-    questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(unitName, new GameDatabaseManager(unitName));
+  void initialize() {
+    gameDatabaseManager = new GameDatabaseManager(unitName);
+    questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(unitName);
   }
 
   @Test
   void testGetScore() {
-    var game = new Game(questionAnswerPairDatabaseManager);
+    var game = new Game(questionAnswerPairDatabaseManager, gameDatabaseManager);
     assertEquals(0, game.getScore());
   }
 
   @Test
   void testCheckAnswer() {
-      var game = new Game(questionAnswerPairDatabaseManager);
+      var game = new Game(questionAnswerPairDatabaseManager, gameDatabaseManager);
       assertTrue(game.checkAnswer("4"));
   }
 
   @Test
   void testStopGame() {
-    var game = new Game(questionAnswerPairDatabaseManager);
+    var game = new Game(questionAnswerPairDatabaseManager, gameDatabaseManager);
     assertTrue(game.isGameContinued());
 
     game.stopGame();
@@ -40,7 +41,7 @@ class GameTest {
 
   @Test
   void testGetCurrentQuestion() {
-    var game = new Game(questionAnswerPairDatabaseManager);
+    var game = new Game(questionAnswerPairDatabaseManager, gameDatabaseManager);
     assertEquals("2+2", game.getCurrentQuestion());
   }
 }

@@ -6,16 +6,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AdminCommandTest {
+class AdminCommandTest {
   private static String unitName = "TestQuizUnit";
   private static QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager;
   private static Game game;
 
   @BeforeEach
-  void initialize()
-  {
-    questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(unitName, new GameDatabaseManager(unitName));
-    game = new Game(-1L, questionAnswerPairDatabaseManager);
+  void initialize() {
+    questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(unitName);
+    game = new Game(-1L, questionAnswerPairDatabaseManager, new GameDatabaseManager(unitName));
   }
 
   @Test

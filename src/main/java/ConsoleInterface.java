@@ -16,7 +16,7 @@ public class ConsoleInterface {
           new AnswerInputHandler());
 
   public static void main(String[] args) {
-    game = new Game((long)-1, new QuestionAnswerPairDatabaseManager("QuizUnit", gameDatabaseManager));
+    game = new Game((long)-1, new QuestionAnswerPairDatabaseManager("QuizUnit"), gameDatabaseManager);
     salute();
     play();
 

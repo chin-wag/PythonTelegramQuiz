@@ -30,7 +30,7 @@ public enum AdminCommand {
 
     public String execute(Game game, String query) {
       try {
-        var pairs = questionAnswerPairDatabaseManager.getPairs(game.getId());
+        var pairs = questionAnswerPairDatabaseManager.getPairs(1);
         var answer = new StringBuilder();
         for (QuestionAnswerPair currentPair: pairs) {
           answer.append(String.format("%s. %s ; %s\n", currentPair.getId(), currentPair.getQuestion(), currentPair.getAnswer()));
@@ -117,8 +117,7 @@ public enum AdminCommand {
     }
   },;
 
-  GameDatabaseManager gameDatabaseManager = new GameDatabaseManager("QuizUnit");
-  QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager("QuizUnit", gameDatabaseManager);
+  QuestionAnswerPairDatabaseManager questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager("QuizUnit");
   static AdminIdsDatabaseManager adminIdsDatabaseManager = new AdminIdsDatabaseManager("QuizUnit");
 
   abstract String getDescription();

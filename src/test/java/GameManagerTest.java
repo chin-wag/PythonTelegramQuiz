@@ -17,7 +17,7 @@ class GameManagerTest {
   void initialize() {
     var unitName = "TestQuizUnit";
     gameDatabaseManager = new GameDatabaseManager(unitName);
-    var questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(unitName, gameDatabaseManager);
+    var questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager(unitName);
     gameManager = new GameManager(gameDatabaseManager, questionAnswerPairDatabaseManager);
   }
 

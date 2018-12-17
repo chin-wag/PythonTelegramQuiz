@@ -2,6 +2,7 @@ package main.java;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class GameManager {
   private GameDatabaseManager gameDatabaseManager;
@@ -18,11 +19,11 @@ public class GameManager {
 
   GameManager() {
     gameDatabaseManager = new GameDatabaseManager("QuizUnit");
-    questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager("QuizUnit", gameDatabaseManager);
+    questionAnswerPairDatabaseManager = new QuestionAnswerPairDatabaseManager("QuizUnit");
   }
 
   private void addNewUser(long id) {
-    var game = new Game(id, questionAnswerPairDatabaseManager);
+    var game = new Game(id, questionAnswerPairDatabaseManager, gameDatabaseManager);
     gameDatabaseManager.save(game);
   }
 
@@ -53,15 +54,13 @@ public class GameManager {
     var answer  = "";
 
     if (currentGame.isGameContinued()) {
-      handled: {
-        for (var h : inputHandlers) {
-          if (h.canHandle(currentGame, userMessage)) {
-            answer = h.handle(currentGame, userMessage);
-            break handled;
-          }
-        }
+      Optional<String> ans = inputHandlers.stream()
+              .filter(h -> h.canHandle(currentGame, userMessage))
+              .findFirst()
+              .map(h -> h.handle(currentGame, userMessage));
+      if (!ans.isPresent())
         return String.format("Команды %s не существует", userMessage);
-      }
+      answer = ans.get();
     }
 
     if (!currentGame.isGameContinued()) {

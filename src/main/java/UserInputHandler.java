@@ -2,7 +2,6 @@ package main.java;
 
 
 public class UserInputHandler implements InputHandler {
-  @Override
   public boolean canHandle(Game game, String userMessage) {
     if (isNotInputCommand(userMessage)) {
       return false;
