@@ -1,15 +1,10 @@
-import org.junit.jupiter.api.Test;
+package test.java;
 
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import main.java.*;
 
 class UserCommandTest {
-  @Test
-  void testIsUserInputCommand() {
-    assertTrue(UserCommand.isUserInputCommand("/score"));
-    assertTrue(UserCommand.isUserInputCommand("/blablabla"));
-    assertFalse(UserCommand.isUserInputCommand("score"));
-  }
-
   @Test
   void testIsUserInputValidCommand() {
     assertTrue(UserCommand.isValidUserCommand("SCORE"));
@@ -20,10 +15,11 @@ class UserCommandTest {
 
   @Test
   void testHelp() {
+    var gameDatabaseManager = new GameDatabaseManager("TestQuizUnit");
       assertEquals(
               "Команды: /score - узнать количество очков, /help - справка, /stop - остановить " +
               "викторину",
-              UserCommand.HELP.execute(
-                      new Game(new QuestionManagerMock(new QuestionAnswerPair("2+2", "4")))));
+              UserCommand.HELP.execute(new Game(new QuestionAnswerPairDatabaseManager(
+                      "TestQuizUnit"), gameDatabaseManager)));
   }
 }
