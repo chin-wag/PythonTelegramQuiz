@@ -50,6 +50,6 @@ public class TelegramInterface extends TelegramLongPollingBot {
 
   @Override
   public String getBotToken() {
-    return "751797870:AAFogZy15LunuYlxG31iwe7jAoWTmq80tmI";
+    return "123456789";  // write token here
   }
 }
